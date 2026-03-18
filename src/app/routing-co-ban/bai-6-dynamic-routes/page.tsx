@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CodeBlock } from '@/components/CodeBlock';
 
 const exampleSlugs = [
   { slug: 'javascript-co-ban', title: 'JavaScript Cơ Bản' },
@@ -26,33 +27,37 @@ export default function Bai6DynamicRoutesPage() {
         <h2 className="mb-3 text-xl font-semibold text-white">
           Cú pháp Dynamic Segments
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/blog/[slug]/page.tsx     → /blog/bai-viet-1, /blog/bai-viet-2
-app/shop/[id]/page.tsx      → /shop/1, /shop/2, /shop/abc
-app/user/[userId]/page.tsx  → /user/123, /user/john`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/blog/[slug]/page.tsx     → /blog/bai-viet-1, /blog/bai-viet-2
+            app/shop/[id]/page.tsx      → /shop/1, /shop/2, /shop/abc
+            app/user/[userId]/page.tsx  → /user/123, /user/john
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
         <h2 className="mb-3 text-xl font-semibold text-white">
           Đọc params trong page
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/blog/[slug]/page.tsx
-export default async function BlogPost({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+        <CodeBlock>
+          {`
+            // app/blog/[slug]/page.tsx
+            export default async function BlogPost({
+              params,
+            }: {
+              params: Promise<{ slug: string }>;
+            }) {
+              const { slug } = await params;
 
-  return (
-    <div>
-      <h1>Bài viết: {slug}</h1>
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <h1>Bài viết: {slug}</h1>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">

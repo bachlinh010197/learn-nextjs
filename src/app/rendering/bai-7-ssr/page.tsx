@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 
@@ -119,22 +120,24 @@ export default async function Bai7Page({
             <h3 className="mb-2 text-lg font-medium text-slate-300">
               1. cookies()
             </h3>
-            <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-              <code>{`import { cookies } from "next/headers";
+            <CodeBlock>
+              {`
+                import { cookies } from "next/headers";
 
-export default async function Page() {
-  const cookieStore = await cookies();
+                export default async function Page() {
+                  const cookieStore = await cookies();
 
-  // Đọc cookie
-  const theme = cookieStore.get("theme");
-  console.log(theme?.value); // "dark"
+                  // Đọc cookie
+                  const theme = cookieStore.get("theme");
+                  console.log(theme?.value); // "dark"
 
-  // Đọc tất cả cookies
-  const all = cookieStore.getAll();
+                  // Đọc tất cả cookies
+                  const all = cookieStore.getAll();
 
-  return <div>Theme: {theme?.value}</div>;
-}`}</code>
-            </pre>
+                  return <div>Theme: {theme?.value}</div>;
+                }
+              `}
+            </CodeBlock>
           </div>
 
           {/* headers() */}
@@ -142,24 +145,26 @@ export default async function Page() {
             <h3 className="mb-2 text-lg font-medium text-slate-300">
               2. headers()
             </h3>
-            <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-              <code>{`import { headers } from "next/headers";
+            <CodeBlock>
+              {`
+                import { headers } from "next/headers";
 
-export default async function Page() {
-  const headersList = await headers();
+                export default async function Page() {
+                  const headersList = await headers();
 
-  const userAgent = headersList.get("user-agent");
-  const referer = headersList.get("referer");
-  const ip = headersList.get("x-forwarded-for");
+                  const userAgent = headersList.get("user-agent");
+                  const referer = headersList.get("referer");
+                  const ip = headersList.get("x-forwarded-for");
 
-  return (
-    <div>
-      <p>Browser: {userAgent}</p>
-      <p>Từ trang: {referer}</p>
-    </div>
-  );
-}`}</code>
-            </pre>
+                  return (
+                    <div>
+                      <p>Browser: {userAgent}</p>
+                      <p>Từ trang: {referer}</p>
+                    </div>
+                  );
+                }
+              `}
+            </CodeBlock>
           </div>
 
           {/* searchParams */}
@@ -167,26 +172,28 @@ export default async function Page() {
             <h3 className="mb-2 text-lg font-medium text-slate-300">
               3. searchParams
             </h3>
-            <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-              <code>{`// URL: /products?category=phone&sort=price
+            <CodeBlock>
+              {`
+                // URL: /products?category=phone&sort=price
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const params = await searchParams;
-  const category = params.category; // "phone"
-  const sort = params.sort;         // "price"
+                export default async function Page({
+                  searchParams,
+                }: {
+                  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+                }) {
+                  const params = await searchParams;
+                  const category = params.category; // "phone"
+                  const sort = params.sort;         // "price"
 
-  return (
-    <div>
-      <p>Category: {category}</p>
-      <p>Sort: {sort}</p>
-    </div>
-  );
-}`}</code>
-            </pre>
+                  return (
+                    <div>
+                      <p>Category: {category}</p>
+                      <p>Sort: {sort}</p>
+                    </div>
+                  );
+                }
+              `}
+            </CodeBlock>
           </div>
         </div>
       </section>
@@ -201,17 +208,19 @@ export default async function Page({
           <code>cache: &quot;no-store&quot;</code> để khiến route trở thành
           dynamic:
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`export default async function Page() {
-  // Fetch mới mỗi request - không cache
-  const res = await fetch("https://api.example.com/live-data", {
-    cache: "no-store",
-  });
-  const data = await res.json();
+        <CodeBlock>
+          {`
+            export default async function Page() {
+              // Fetch mới mỗi request - không cache
+              const res = await fetch("https://api.example.com/live-data", {
+                cache: "no-store",
+              });
+              const data = await res.json();
 
-  return <div>{data.value}</div>;
-}`}</code>
-        </pre>
+              return <div>{data.value}</div>;
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Summary */}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CodeBlock } from '@/components/CodeBlock';
 
 export default function Bai4ErrorPage() {
   const [shouldError, setShouldError] = useState(false);
@@ -30,26 +31,28 @@ export default function Bai4ErrorPage() {
         <h2 className="mb-3 text-xl font-semibold text-white">
           Cách tạo Error Boundary
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/error.tsx
-"use client"; // Bắt buộc phải là Client Component
+        <CodeBlock>
+          {`
+            // app/dashboard/error.tsx
+            "use client"; // Bắt buộc phải là Client Component
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  return (
-    <div>
-      <h2>Đã xảy ra lỗi!</h2>
-      <p>{error.message}</p>
-      <button onClick={reset}>Thử lại</button>
-    </div>
-  );
-}`}</code>
-        </pre>
+            export default function Error({
+              error,
+              reset,
+            }: {
+              error: Error & { digest?: string };
+              reset: () => void;
+            }) {
+              return (
+                <div>
+                  <h2>Đã xảy ra lỗi!</h2>
+                  <p>{error.message}</p>
+                  <button onClick={reset}>Thử lại</button>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -59,13 +62,15 @@ export default function Error({
         <p className="mb-4 text-slate-300">
           Next.js tự động bọc page trong React Error Boundary:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`<Layout>
-  <ErrorBoundary fallback={<Error />}>
-    <Page />
-  </ErrorBoundary>
-</Layout>`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            <Layout>
+              <ErrorBoundary fallback={<Error />}>
+                <Page />
+              </ErrorBoundary>
+            </Layout>
+          `}
+        </CodeBlock>
         <p className="text-slate-300">
           Lưu ý:{' '}
           <strong>error.tsx không bắt được lỗi từ layout.tsx cùng cấp</strong>.

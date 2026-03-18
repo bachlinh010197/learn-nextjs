@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -55,23 +56,25 @@ export default async function Bai10Page() {
           </li>
         </ol>
 
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/about/page.tsx
-// Trang này tự động SSG vì không có Dynamic APIs
+        <CodeBlock>
+          {`
+            // app/about/page.tsx
+            // Trang này tự động SSG vì không có Dynamic APIs
 
-export default async function AboutPage() {
-  // Fetch được cache mặc định → SSG
-  const res = await fetch("https://api.example.com/about");
-  const data = await res.json();
+            export default async function AboutPage() {
+              // Fetch được cache mặc định → SSG
+              const res = await fetch("https://api.example.com/about");
+              const data = await res.json();
 
-  return (
-    <div>
-      <h1>{data.title}</h1>
-      <p>{data.content}</p>
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <h1>{data.title}</h1>
+                  <p>{data.content}</p>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* generateStaticParams */}
@@ -86,39 +89,41 @@ export default async function AboutPage() {
           params cần pre-render.
         </p>
 
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/blog/[slug]/page.tsx
+        <CodeBlock>
+          {`
+            // app/blog/[slug]/page.tsx
 
-// Bước 1: Cho Next.js biết tạo HTML cho những slug nào
-export async function generateStaticParams() {
-  const res = await fetch("https://api.example.com/posts");
-  const posts = await res.json();
+            // Bước 1: Cho Next.js biết tạo HTML cho những slug nào
+            export async function generateStaticParams() {
+              const res = await fetch("https://api.example.com/posts");
+              const posts = await res.json();
 
-  // Trả về array of params
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-  // → Tạo HTML cho /blog/hello-world, /blog/nextjs-guide, ...
-}
+              // Trả về array of params
+              return posts.map((post) => ({
+                slug: post.slug,
+              }));
+              // → Tạo HTML cho /blog/hello-world, /blog/nextjs-guide, ...
+            }
 
-// Bước 2: Render page cho mỗi slug
-export default async function BlogPost({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
-  const post = await res.json();
+            // Bước 2: Render page cho mỗi slug
+            export default async function BlogPost({
+              params,
+            }: {
+              params: Promise<{ slug: string }>;
+            }) {
+              const { slug } = await params;
+              const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
+              const post = await res.json();
 
-  return (
-    <article>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-    </article>
-  );
-}`}</code>
-        </pre>
+              return (
+                <article>
+                  <h1>{post.title}</h1>
+                  <p>{post.content}</p>
+                </article>
+              );
+            }
+          `}
+        </CodeBlock>
 
         <div className="rounded-lg border border-amber-800 bg-amber-900/30 p-4">
           <p className="text-sm text-amber-300">
@@ -136,29 +141,31 @@ export default async function BlogPost({
         <h2 className="mb-3 text-xl font-semibold text-white">
           Nhiều dynamic segments
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/shop/[category]/[product]/page.tsx
+        <CodeBlock>
+          {`
+            // app/shop/[category]/[product]/page.tsx
 
-export async function generateStaticParams() {
-  const products = await fetch("https://api.example.com/products");
-  const data = await products.json();
+            export async function generateStaticParams() {
+              const products = await fetch("https://api.example.com/products");
+              const data = await products.json();
 
-  return data.map((product) => ({
-    category: product.category,
-    product: product.slug,
-  }));
-  // → /shop/phones/iphone-15, /shop/laptops/macbook-pro, ...
-}
+              return data.map((product) => ({
+                category: product.category,
+                product: product.slug,
+              }));
+              // → /shop/phones/iphone-15, /shop/laptops/macbook-pro, ...
+            }
 
-export default async function ProductPage({
-  params,
-}: {
-  params: Promise<{ category: string; product: string }>;
-}) {
-  const { category, product } = await params;
-  // ...
-}`}</code>
-        </pre>
+            export default async function ProductPage({
+              params,
+            }: {
+              params: Promise<{ category: string; product: string }>;
+            }) {
+              const { category, product } = await params;
+              // ...
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* generateMetadata */}
@@ -166,32 +173,34 @@ export default async function ProductPage({
         <h2 className="mb-3 text-xl font-semibold text-white">
           generateMetadata — SEO cho dynamic pages
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/blog/[slug]/page.tsx
+        <CodeBlock>
+          {`
+            // app/blog/[slug]/page.tsx
 
-import type { Metadata } from "next";
+            import type { Metadata } from "next";
 
-// Dynamic metadata cho mỗi bài viết
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
-  const post = await res.json();
+            // Dynamic metadata cho mỗi bài viết
+            export async function generateMetadata({
+              params,
+            }: {
+              params: Promise<{ slug: string }>;
+            }): Promise<Metadata> {
+              const { slug } = await params;
+              const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
+              const post = await res.json();
 
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      images: [post.coverImage],
-    },
-  };
-}`}</code>
-        </pre>
+              return {
+                title: post.title,
+                description: post.excerpt,
+                openGraph: {
+                  title: post.title,
+                  description: post.excerpt,
+                  images: [post.coverImage],
+                },
+              };
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Live demo */}
@@ -235,14 +244,16 @@ export async function generateMetadata({
         <h2 className="mb-3 text-xl font-semibold text-white">
           dynamicParams config
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// Cho phép render on-demand cho params không có trong
-// generateStaticParams (mặc định: true)
-export const dynamicParams = true;
+        <CodeBlock>
+          {`
+            // Cho phép render on-demand cho params không có trong
+            // generateStaticParams (mặc định: true)
+            export const dynamicParams = true;
 
-// Trả về 404 cho params không có trong generateStaticParams
-export const dynamicParams = false;`}</code>
-        </pre>
+            // Trả về 404 cho params không có trong generateStaticParams
+            export const dynamicParams = false;
+          `}
+        </CodeBlock>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>

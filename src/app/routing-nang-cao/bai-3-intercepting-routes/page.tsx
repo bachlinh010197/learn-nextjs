@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai3InterceptingRoutesPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -128,20 +130,22 @@ export default function Bai3InterceptingRoutesPage() {
         <p className="mb-4 text-slate-300">
           Kết hợp Intercepting Routes với Parallel Routes để tạo modal pattern:
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-├── feed/
-│   ├── layout.tsx
-│   ├── page.tsx              ← Danh sách ảnh
-│   ├── @modal/
-│   │   ├── default.tsx       ← Render nothing khi không có modal
-│   │   └── (..)photo/[id]/
-│   │       └── page.tsx      ← Modal xem ảnh (intercepted)
-│   └── ...
-└── photo/
-    └── [id]/
-        └── page.tsx          ← Trang xem ảnh đầy đủ (direct access)`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            ├── feed/
+            │   ├── layout.tsx
+            │   ├── page.tsx              ← Danh sách ảnh
+            │   ├── @modal/
+            │   │   ├── default.tsx       ← Render nothing khi không có modal
+            │   │   └── (..)photo/[id]/
+            │   │       └── page.tsx      ← Modal xem ảnh (intercepted)
+            │   └── ...
+            └── photo/
+                └── [id]/
+                    └── page.tsx          ← Trang xem ảnh đầy đủ (direct access)
+          `}
+        </CodeBlock>
       </section>
 
       {/* Ví dụ code Modal */}
@@ -151,55 +155,61 @@ export default function Bai3InterceptingRoutesPage() {
         <h3 className="mt-4 mb-2 text-lg font-medium text-white">
           1. Layout nhận modal slot
         </h3>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/feed/layout.tsx
-export default function FeedLayout({
-  children,
-  modal,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
-  return (
-    <>
-      {children}
-      {modal}
-    </>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/feed/layout.tsx
+            export default function FeedLayout({
+              children,
+              modal,
+            }: {
+              children: React.ReactNode;
+              modal: React.ReactNode;
+            }) {
+              return (
+                <>
+                  {children}
+                  {modal}
+                </>
+              );
+            }
+          `}
+        </CodeBlock>
 
         <h3 className="mt-6 mb-2 text-lg font-medium text-white">
           2. Modal default (không hiển thị gì)
         </h3>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/feed/@modal/default.tsx
-export default function Default() {
-  return null;
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/feed/@modal/default.tsx
+            export default function Default() {
+              return null;
+            }
+          `}
+        </CodeBlock>
 
         <h3 className="mt-6 mb-2 text-lg font-medium text-white">
           3. Intercepted route (hiển thị modal)
         </h3>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/feed/@modal/(..)photo/[id]/page.tsx
-export default function PhotoModal({
-  params,
-}: {
-  params: { id: string };
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center
-      justify-center bg-black/60">
-      <div className="rounded-lg bg-slate-800 p-6">
-        <h2>Ảnh #{params.id}</h2>
-        <p>Hiển thị trong modal (intercepted)</p>
-      </div>
-    </div>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/feed/@modal/(..)photo/[id]/page.tsx
+            export default function PhotoModal({
+              params,
+            }: {
+              params: { id: string };
+            }) {
+              return (
+                <div className="fixed inset-0 z-50 flex items-center
+                  justify-center bg-black/60">
+                  <div className="rounded-lg bg-slate-800 p-6">
+                    <h2>Ảnh #{params.id}</h2>
+                    <p>Hiển thị trong modal (intercepted)</p>
+                  </div>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Cách hoạt động */}

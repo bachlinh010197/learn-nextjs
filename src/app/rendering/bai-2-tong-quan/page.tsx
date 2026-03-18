@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -27,23 +28,25 @@ export default function Bai2Page() {
           HTML trống và JavaScript bundle. Sau khi JS tải xong, React mới render
           UI và fetch dữ liệu.
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`"use client";
-import { useEffect, useState } from "react";
+        <CodeBlock>
+          {`
+            "use client";
+            import { useEffect, useState } from "react";
 
-export default function CSRPage() {
-  const [data, setData] = useState(null);
+            export default function CSRPage() {
+              const [data, setData] = useState(null);
 
-  useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then(setData);
-  }, []);
+              useEffect(() => {
+                fetch("/api/products")
+                  .then((res) => res.json())
+                  .then(setData);
+              }, []);
 
-  if (!data) return <p>Loading...</p>;
-  return <ProductList data={data} />;
-}`}</code>
-        </pre>
+              if (!data) return <p>Loading...</p>;
+              return <ProductList data={data} />;
+            }
+          `}
+        </CodeBlock>
         <p className="mt-2 text-sm text-slate-400">
           ✅ Phù hợp: Dashboard, admin panel, ứng dụng nội bộ.
           <br />❌ Không phù hợp: Trang cần SEO, landing page.
@@ -60,22 +63,24 @@ export default function CSRPage() {
           fetch dữ liệu, render React components thành HTML, và gửi về cho trình
           duyệt. Trang luôn có dữ liệu mới nhất.
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// Trang này tự động SSR khi dùng Dynamic APIs
-import { cookies } from "next/headers";
+        <CodeBlock>
+          {`
+            // Trang này tự động SSR khi dùng Dynamic APIs
+            import { cookies } from "next/headers";
 
-export default async function SSRPage() {
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("theme");
+            export default async function SSRPage() {
+              const cookieStore = await cookies();
+              const theme = cookieStore.get("theme");
 
-  const res = await fetch("https://api.example.com/data", {
-    cache: "no-store",
-  });
-  const data = await res.json();
+              const res = await fetch("https://api.example.com/data", {
+                cache: "no-store",
+              });
+              const data = await res.json();
 
-  return <div>...</div>;
-}`}</code>
-        </pre>
+              return <div>...</div>;
+            }
+          `}
+        </CodeBlock>
         <p className="mt-2 text-sm text-slate-400">
           ✅ Phù hợp: Nội dung cá nhân hóa, dữ liệu real-time.
           <br />❌ Nhược điểm: Chậm hơn SSG vì phải render mỗi request.
@@ -92,28 +97,30 @@ export default async function SSRPage() {
           serve trực tiếp từ CDN, cho tốc độ cực nhanh. Đây là chiến lược mặc
           định của Next.js khi không có dynamic APIs.
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// Trang này tự động SSG (không có dynamic APIs)
-export default async function BlogPage() {
-  const posts = await fetch("https://api.example.com/posts");
-  const data = await posts.json();
+        <CodeBlock>
+          {`
+            // Trang này tự động SSG (không có dynamic APIs)
+            export default async function BlogPage() {
+              const posts = await fetch("https://api.example.com/posts");
+              const data = await posts.json();
 
-  return (
-    <ul>
-      {data.map((post) => (
-        <li key={post.id}>{post.title}</li>
-      ))}
-    </ul>
-  );
-}
+              return (
+                <ul>
+                  {data.map((post) => (
+                    <li key={post.id}>{post.title}</li>
+                  ))}
+                </ul>
+              );
+            }
 
-// Cho dynamic routes
-export async function generateStaticParams() {
-  const posts = await fetch("https://api.example.com/posts");
-  const data = await posts.json();
-  return data.map((post) => ({ slug: post.slug }));
-}`}</code>
-        </pre>
+            // Cho dynamic routes
+            export async function generateStaticParams() {
+              const posts = await fetch("https://api.example.com/posts");
+              const data = await posts.json();
+              return data.map((post) => ({ slug: post.slug }));
+            }
+          `}
+        </CodeBlock>
         <p className="mt-2 text-sm text-slate-400">
           ✅ Phù hợp: Blog, docs, marketing pages.
           <br />❌ Nhược điểm: Dữ liệu chỉ cập nhật khi build lại.
@@ -130,22 +137,24 @@ export async function generateStaticParams() {
           regenerate sau một khoảng thời gian (revalidate). Người dùng vẫn nhận
           được trang tĩnh nhanh, trong khi dữ liệu được cập nhật định kỳ.
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// Revalidate mỗi 60 giây
-export const revalidate = 60;
+        <CodeBlock>
+          {`
+            // Revalidate mỗi 60 giây
+            export const revalidate = 60;
 
-export default async function ISRPage() {
-  const res = await fetch("https://api.example.com/products");
-  const products = await res.json();
+            export default async function ISRPage() {
+              const res = await fetch("https://api.example.com/products");
+              const products = await res.json();
 
-  return (
-    <div>
-      <p>Cập nhật lần cuối: {new Date().toLocaleString("vi-VN")}</p>
-      <ProductList products={products} />
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <p>Cập nhật lần cuối: {new Date().toLocaleString("vi-VN")}</p>
+                  <ProductList products={products} />
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
         <p className="mt-2 text-sm text-slate-400">
           ✅ Phù hợp: E-commerce, news, catalog — dữ liệu thay đổi nhưng không
           cần real-time.
@@ -160,29 +169,31 @@ export default async function ISRPage() {
           (chunks). Phần nào render xong được gửi trước, phần nào chậm sẽ hiển
           thị loading state rồi cập nhật sau.
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`import { Suspense } from "react";
+        <CodeBlock>
+          {`
+            import { Suspense } from "react";
 
-export default function StreamingPage() {
-  return (
-    <div>
-      <h1>Dashboard</h1>
+            export default function StreamingPage() {
+              return (
+                <div>
+                  <h1>Dashboard</h1>
 
-      {/* Hiển thị ngay */}
-      <header>Welcome back!</header>
+                  {/* Hiển thị ngay */}
+                  <header>Welcome back!</header>
 
-      {/* Streaming - hiện loading rồi thay thế khi xong */}
-      <Suspense fallback={<p>Đang tải thống kê...</p>}>
-        <SlowStatistics />
-      </Suspense>
+                  {/* Streaming - hiện loading rồi thay thế khi xong */}
+                  <Suspense fallback={<p>Đang tải thống kê...</p>}>
+                    <SlowStatistics />
+                  </Suspense>
 
-      <Suspense fallback={<p>Đang tải biểu đồ...</p>}>
-        <SlowChart />
-      </Suspense>
-    </div>
-  );
-}`}</code>
-        </pre>
+                  <Suspense fallback={<p>Đang tải biểu đồ...</p>}>
+                    <SlowChart />
+                  </Suspense>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
         <p className="mt-2 text-sm text-slate-400">
           ✅ Phù hợp: Trang có nhiều phần với tốc độ tải khác nhau (dashboard,
           feed).

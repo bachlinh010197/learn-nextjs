@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,21 +22,21 @@ export default function Bai5FullRouteCache() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Cách hoạt động
         </h2>
-        <div className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-6 text-sm text-zinc-100">
-          <pre>
-            <code>{`Build Time (next build)
-│
-├── Static Route (không có dynamic functions)
-│   ├── Render HTML + RSC Payload
-│   ├── Lưu vào Full Route Cache  ✅
-│   └── User request → Trả về từ cache (rất nhanh)
-│
-└── Dynamic Route (có cookies, headers, searchParams...)
-    ├── Không thể render lúc build
-    ├── KHÔNG lưu vào Full Route Cache  ❌
-    └── User request → Render on-demand mỗi lần`}</code>
-          </pre>
-        </div>
+        <CodeBlock>
+          {`
+            Build Time (next build)
+            │
+            ├── Static Route (không có dynamic functions)
+            │   ├── Render HTML + RSC Payload
+            │   ├── Lưu vào Full Route Cache  ✅
+            │   └── User request → Trả về từ cache (rất nhanh)
+            │
+            └── Dynamic Route (có cookies, headers, searchParams...)
+                ├── Không thể render lúc build
+                ├── KHÔNG lưu vào Full Route Cache  ❌
+                └── User request → Render on-demand mỗi lần
+          `}
+        </CodeBlock>
         <p className="text-slate-300">
           Tại build time, Next.js sẽ phân tích mỗi route. Nếu route không sử
           dụng bất kỳ dynamic function nào, nó sẽ được pre-render và lưu vào
@@ -57,44 +58,46 @@ export default function Bai5FullRouteCache() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Static Route vs Dynamic Route
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// ✅ STATIC — Được cache vào Full Route Cache
-// app/about/page.tsx
-export default function AboutPage() {
-  return <h1>Giới thiệu về chúng tôi</h1>;
-}
+        <CodeBlock>
+          {`
+            // ✅ STATIC — Được cache vào Full Route Cache
+            // app/about/page.tsx
+            export default function AboutPage() {
+              return <h1>Giới thiệu về chúng tôi</h1>;
+            }
 
-// ✅ STATIC — fetch có cache cũng là static
-// app/products/page.tsx
-export default async function ProductsPage() {
-  const res = await fetch('https://api.example.com/products', {
-    cache: 'force-cache',
-  });
-  const products = await res.json();
-  return <ProductList products={products} />;
-}
+            // ✅ STATIC — fetch có cache cũng là static
+            // app/products/page.tsx
+            export default async function ProductsPage() {
+              const res = await fetch('https://api.example.com/products', {
+                cache: 'force-cache',
+              });
+              const products = await res.json();
+              return <ProductList products={products} />;
+            }
 
-// ❌ DYNAMIC — Sử dụng cookies() → không cache
-// app/dashboard/page.tsx
-import { cookies } from 'next/headers';
+            // ❌ DYNAMIC — Sử dụng cookies() → không cache
+            // app/dashboard/page.tsx
+            import { cookies } from 'next/headers';
 
-export default async function DashboardPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token');
-  // ...
-}
+            export default async function DashboardPage() {
+              const cookieStore = await cookies();
+              const token = cookieStore.get('token');
+              // ...
+            }
 
-// ❌ DYNAMIC — Sử dụng searchParams → không cache
-// app/search/page.tsx
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q: string }>;
-}) {
-  const { q } = await searchParams;
-  // ...
-}`}</code>
-        </pre>
+            // ❌ DYNAMIC — Sử dụng searchParams → không cache
+            // app/search/page.tsx
+            export default async function SearchPage({
+              searchParams,
+            }: {
+              searchParams: Promise<{ q: string }>;
+            }) {
+              const { q } = await searchParams;
+              // ...
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Dynamic Functions */}
@@ -168,30 +171,32 @@ export default async function SearchPage({
           </code>
           , Next.js sẽ đợi có incoming request trước khi render.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dynamic-page/page.tsx
-import { connection } from 'next/server';
+        <CodeBlock>
+          {`
+            // app/dynamic-page/page.tsx
+            import { connection } from 'next/server';
 
-export default async function DynamicPage() {
-  // Đánh dấu route này phải render dynamically
-  await connection();
+            export default async function DynamicPage() {
+              // Đánh dấu route này phải render dynamically
+              await connection();
 
-  // Bây giờ có thể sử dụng dữ liệu phụ thuộc vào request
-  const currentTime = new Date().toLocaleString('vi-VN');
+              // Bây giờ có thể sử dụng dữ liệu phụ thuộc vào request
+              const currentTime = new Date().toLocaleString('vi-VN');
 
-  return (
-    <div>
-      <h1>Trang Dynamic</h1>
-      <p>Thời gian hiện tại: {currentTime}</p>
-    </div>
-  );
-}
+              return (
+                <div>
+                  <h1>Trang Dynamic</h1>
+                  <p>Thời gian hiện tại: {currentTime}</p>
+                </div>
+              );
+            }
 
-// Khi nào dùng connection()?
-// - Khi bạn muốn route luôn render mới mỗi request
-// - Khi cần dữ liệu phụ thuộc vào thời gian thực
-// - Thay thế cho việc dùng cookies/headers chỉ để opt-in dynamic`}</code>
-        </pre>
+            // Khi nào dùng connection()?
+            // - Khi bạn muốn route luôn render mới mỗi request
+            // - Khi cần dữ liệu phụ thuộc vào thời gian thực
+            // - Thay thế cho việc dùng cookies/headers chỉ để opt-in dynamic
+          `}
+        </CodeBlock>
         <div className="rounded-lg border border-sky-800 bg-sky-900/30 p-4 text-sm text-sky-300">
           <strong>💡 Mẹo:</strong> Dùng <code>await connection()</code> khi bạn
           muốn opt-in dynamic rendering mà không cần đọc cookies hay headers.
@@ -207,24 +212,26 @@ export default async function DynamicPage() {
         <p className="mb-4 text-slate-300">
           Full Route Cache có thể bị vô hiệu hoá bằng các cách sau:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// 1. Revalidate Data Cache → tự động invalidate Full Route Cache
-// Khi Data Cache bị revalidate, Next.js sẽ re-render route
-import { revalidatePath, revalidateTag } from 'next/cache';
+        <CodeBlock>
+          {`
+            // 1. Revalidate Data Cache → tự động invalidate Full Route Cache
+            // Khi Data Cache bị revalidate, Next.js sẽ re-render route
+            import { revalidatePath, revalidateTag } from 'next/cache';
 
-// Trong Server Action:
-revalidatePath('/products');    // Invalidate theo path
-revalidateTag('products');     // Invalidate theo tag
+            // Trong Server Action:
+            revalidatePath('/products');    // Invalidate theo path
+            revalidateTag('products');     // Invalidate theo tag
 
-// 2. Re-deploy
-// Mỗi lần deploy mới, Full Route Cache bị xoá hoàn toàn
-// (Data Cache vẫn giữ nguyên nếu dùng external cache store)
+            // 2. Re-deploy
+            // Mỗi lần deploy mới, Full Route Cache bị xoá hoàn toàn
+            // (Data Cache vẫn giữ nguyên nếu dùng external cache store)
 
-// 3. Sử dụng Segment Config
-// app/products/page.tsx
-export const dynamic = 'force-dynamic';  // Luôn render dynamic
-export const revalidate = 0;             // Tương đương force-dynamic`}</code>
-        </pre>
+            // 3. Sử dụng Segment Config
+            // app/products/page.tsx
+            export const dynamic = 'force-dynamic';  // Luôn render dynamic
+            export const revalidate = 0;             // Tương đương force-dynamic
+          `}
+        </CodeBlock>
       </section>
 
       {/* Kết hợp với Partial Prerendering */}
@@ -240,48 +247,50 @@ export const revalidate = 0;             // Tương đương force-dynamic`}</co
           </code>
           :
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/product/[id]/page.tsx
-import { Suspense } from 'react';
+        <CodeBlock>
+          {`
+            // app/product/[id]/page.tsx
+            import { Suspense } from 'react';
 
-// Component static — dữ liệu cached
-async function ProductInfo({ id }: { id: string }) {
-  const res = await fetch(\`https://api.example.com/products/\${id}\`, {
-    cache: 'force-cache',
-  });
-  const product = await res.json();
-  return <h1>{product.name}</h1>;
-}
+            // Component static — dữ liệu cached
+            async function ProductInfo({ id }: { id: string }) {
+              const res = await fetch(\`https://api.example.com/products/\${id}\`, {
+                cache: 'force-cache',
+              });
+              const product = await res.json();
+              return <h1>{product.name}</h1>;
+            }
 
-// Component dynamic — dữ liệu real-time
-async function ProductStock({ id }: { id: string }) {
-  const res = await fetch(\`https://api.example.com/products/\${id}/stock\`, {
-    cache: 'no-store',
-  });
-  const stock = await res.json();
-  return <p>Còn {stock.quantity} sản phẩm</p>;
-}
+            // Component dynamic — dữ liệu real-time
+            async function ProductStock({ id }: { id: string }) {
+              const res = await fetch(\`https://api.example.com/products/\${id}/stock\`, {
+                cache: 'no-store',
+              });
+              const stock = await res.json();
+              return <p>Còn {stock.quantity} sản phẩm</p>;
+            }
 
-export default async function ProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+            export default async function ProductPage({
+              params,
+            }: {
+              params: Promise<{ id: string }>;
+            }) {
+              const { id } = await params;
 
-  return (
-    <div>
-      {/* Phần static — render nhanh từ cache */}
-      <ProductInfo id={id} />
+              return (
+                <div>
+                  {/* Phần static — render nhanh từ cache */}
+                  <ProductInfo id={id} />
 
-      {/* Phần dynamic — stream khi có dữ liệu */}
-      <Suspense fallback={<p>Đang kiểm tra tồn kho...</p>}>
-        <ProductStock id={id} />
-      </Suspense>
-    </div>
-  );
-}`}</code>
-        </pre>
+                  {/* Phần dynamic — stream khi có dữ liệu */}
+                  <Suspense fallback={<p>Đang kiểm tra tồn kho...</p>}>
+                    <ProductStock id={id} />
+                  </Suspense>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
         <div className="rounded-lg border border-amber-800 bg-amber-900/30 p-4 text-sm text-amber-300">
           <strong>⚠️ Lưu ý:</strong> Khi bất kỳ phần nào của route là dynamic,
           toàn bộ route sẽ trở thành dynamic. Tuy nhiên, phần static vẫn được

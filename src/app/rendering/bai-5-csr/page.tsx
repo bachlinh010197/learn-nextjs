@@ -1,5 +1,6 @@
 'use client';
 
+import { CodeBlock } from '@/components/CodeBlock';
 import { useEffect, useState } from 'react';
 
 interface User {
@@ -74,51 +75,53 @@ export default function Bai5Page() {
         <h2 className="mb-3 text-xl font-semibold text-white">
           Code của trang này
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`"use client";
+        <CodeBlock>
+          {`
+            "use client";
 
-import { useEffect, useState } from "react";
+            import { useEffect, useState } from "react";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
+            interface User {
+              id: number;
+              name: string;
+              email: string;
+              phone: string;
+            }
 
-export default function CSRPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+            export default function CSRPage() {
+              const [users, setUsers] = useState<User[]>([]);
+              const [loading, setLoading] = useState(true);
+              const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => {
-        if (!res.ok) throw new Error("Fetch failed");
-        return res.json();
-      })
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+              useEffect(() => {
+                fetch("https://jsonplaceholder.typicode.com/users")
+                  .then((res) => {
+                    if (!res.ok) throw new Error("Fetch failed");
+                    return res.json();
+                  })
+                  .then((data) => {
+                    setUsers(data);
+                    setLoading(false);
+                  })
+                  .catch((err) => {
+                    setError(err.message);
+                    setLoading(false);
+                  });
+              }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+              if (loading) return <p>Loading...</p>;
+              if (error) return <p>Error: {error}</p>;
 
-  return (
-    <ul>
-      {users.map((user) => (
-        <li key={user.id}>{user.name}</li>
-      ))}
-    </ul>
-  );
-}`}</code>
-        </pre>
+              return (
+                <ul>
+                  {users.map((user) => (
+                    <li key={user.id}>{user.name}</li>
+                  ))}
+                </ul>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Live demo */}

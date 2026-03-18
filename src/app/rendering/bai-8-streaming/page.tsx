@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -109,36 +110,38 @@ export default function Bai8Page() {
           </li>
         </ol>
 
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`import { Suspense } from "react";
+        <CodeBlock>
+          {`
+            import { Suspense } from "react";
 
-export default function Page() {
-  return (
-    <div>
-      {/* Gửi ngay cho browser */}
-      <h1>Dashboard</h1>
-      <nav>...</nav>
+            export default function Page() {
+              return (
+                <div>
+                  {/* Gửi ngay cho browser */}
+                  <h1>Dashboard</h1>
+                  <nav>...</nav>
 
-      {/* Streaming: hiện loading, rồi thay thế */}
-      <Suspense fallback={<p>Đang tải bài viết...</p>}>
-        <SlowPost />   {/* async component - mất 2s */}
-      </Suspense>
+                  {/* Streaming: hiện loading, rồi thay thế */}
+                  <Suspense fallback={<p>Đang tải bài viết...</p>}>
+                    <SlowPost />   {/* async component - mất 2s */}
+                  </Suspense>
 
-      <Suspense fallback={<p>Đang tải bình luận...</p>}>
-        <SlowComments /> {/* async component - mất 4s */}
-      </Suspense>
-    </div>
-  );
-}
+                  <Suspense fallback={<p>Đang tải bình luận...</p>}>
+                    <SlowComments /> {/* async component - mất 4s */}
+                  </Suspense>
+                </div>
+              );
+            }
 
-// SlowPost là async Server Component
-async function SlowPost() {
-  await new Promise(r => setTimeout(r, 2000));
-  const res = await fetch("https://api.example.com/post/1");
-  const post = await res.json();
-  return <article>{post.title}</article>;
-}`}</code>
-        </pre>
+            // SlowPost là async Server Component
+            async function SlowPost() {
+              await new Promise(r => setTimeout(r, 2000));
+              const res = await fetch("https://api.example.com/post/1");
+              const post = await res.json();
+              return <article>{post.title}</article>;
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Live streaming demo */}
@@ -195,23 +198,25 @@ async function SlowPost() {
           Next.js cung cấp convention <code>loading.tsx</code> — tự động bọc
           page trong Suspense boundary:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/dashboard/loading.tsx
-export default function Loading() {
-  return (
-    <div className="animate-pulse">
-      <div className="h-8 w-48 bg-gray-200 rounded mb-4" />
-      <div className="h-4 w-full bg-gray-200 rounded mb-2" />
-      <div className="h-4 w-3/4 bg-gray-200 rounded" />
-    </div>
-  );
-}
+        <CodeBlock>
+          {`
+            // app/dashboard/loading.tsx
+            export default function Loading() {
+              return (
+                <div className="animate-pulse">
+                  <div className="h-8 w-48 bg-gray-200 rounded mb-4" />
+                  <div className="h-4 w-full bg-gray-200 rounded mb-2" />
+                  <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                </div>
+              );
+            }
 
-// Tương đương với:
-<Suspense fallback={<Loading />}>
-  <Page />
-</Suspense>`}</code>
-        </pre>
+            // Tương đương với:
+            <Suspense fallback={<Loading />}>
+              <Page />
+            </Suspense>
+          `}
+        </CodeBlock>
       </section>
 
       {/* Benefits */}

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CodeBlock } from '@/components/CodeBlock';
 
 export default async function DynamicSlugPage({
   params,
@@ -35,22 +36,24 @@ export default async function DynamicSlugPage({
         <h2 className="mb-3 text-lg font-semibold text-white">
           Code của trang này
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// bai-6-dynamic-routes/[slug]/page.tsx
-export default async function DynamicSlugPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+        <CodeBlock>
+          {`
+            // bai-6-dynamic-routes/[slug]/page.tsx
+            export default async function DynamicSlugPage({
+              params,
+            }: {
+              params: Promise<{ slug: string }>;
+            }) {
+              const { slug } = await params;
 
-  return (
-    <div>
-      <p>Slug hiện tại: <strong>{slug}</strong></p>
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <p>Slug hiện tại: <strong>{slug}</strong></p>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </div>
     </div>
   );

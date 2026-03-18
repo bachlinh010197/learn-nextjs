@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai2ParallelRoutesPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -81,19 +83,21 @@ export default function Bai2ParallelRoutesPage() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Cấu trúc thư mục
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-└── dashboard/
-    ├── layout.tsx         ← Nhận props: children, analytics, team
-    ├── page.tsx           ← Slot children mặc định
-    ├── default.tsx        ← Fallback cho children
-    ├── @analytics/
-    │   ├── page.tsx       ← Nội dung analytics
-    │   └── default.tsx    ← Fallback cho analytics
-    └── @team/
-        ├── page.tsx       ← Nội dung team
-        └── default.tsx    ← Fallback cho team`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            └── dashboard/
+                ├── layout.tsx         ← Nhận props: children, analytics, team
+                ├── page.tsx           ← Slot children mặc định
+                ├── default.tsx        ← Fallback cho children
+                ├── @analytics/
+                │   ├── page.tsx       ← Nội dung analytics
+                │   └── default.tsx    ← Fallback cho analytics
+                └── @team/
+                    ├── page.tsx       ← Nội dung team
+                    └── default.tsx    ← Fallback cho team
+          `}
+        </CodeBlock>
       </section>
 
       {/* Ví dụ layout nhận slots */}
@@ -101,28 +105,30 @@ export default function Bai2ParallelRoutesPage() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Layout nhận Parallel Route Slots
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/layout.tsx
-export default function DashboardLayout({
-  children,
-  analytics,
-  team,
-}: {
-  children: React.ReactNode;
-  analytics: React.ReactNode;
-  team: React.ReactNode;
-}) {
-  return (
-    <div>
-      <div>{children}</div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>{analytics}</div>
-        <div>{team}</div>
-      </div>
-    </div>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/dashboard/layout.tsx
+            export default function DashboardLayout({
+              children,
+              analytics,
+              team,
+            }: {
+              children: React.ReactNode;
+              analytics: React.ReactNode;
+              team: React.ReactNode;
+            }) {
+              return (
+                <div>
+                  <div>{children}</div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>{analytics}</div>
+                    <div>{team}</div>
+                  </div>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* default.tsx */}
@@ -147,12 +153,14 @@ export default function DashboardLayout({
             cho mỗi slot để tránh lỗi 404 không mong muốn.
           </p>
         </div>
-        <pre className="mt-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/@analytics/default.tsx
-export default function AnalyticsDefault() {
-  return <div>Đang tải analytics...</div>;
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/dashboard/@analytics/default.tsx
+            export default function AnalyticsDefault() {
+              return <div>Đang tải analytics...</div>;
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Demo */}

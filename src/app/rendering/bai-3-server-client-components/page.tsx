@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 import ClientCounter from './ClientCounter';
 
@@ -78,24 +79,26 @@ export default function Bai3Page() {
           <strong>hydrate</strong> trên client để thêm interactivity.
         </p>
 
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`"use client";
+        <CodeBlock>
+          {`
+            "use client";
 
-import { useState } from "react";
+            import { useState } from "react";
 
-export default function ClientCounter() {
-  const [count, setCount] = useState(0);
+            export default function ClientCounter() {
+              const [count, setCount] = useState(0);
 
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(c => c + 1)}>
-        + Tăng
-      </button>
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <p>Count: {count}</p>
+                  <button onClick={() => setCount(c => c + 1)}>
+                    + Tăng
+                  </button>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Live demo */}

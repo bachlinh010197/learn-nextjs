@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai4AfterFunctionPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -96,35 +98,37 @@ export default function Bai4AfterFunctionPage() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Ví dụ 1: Trong Server Component
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/page.tsx
-import { after } from "next/server";
+        <CodeBlock>
+          {`
+            // app/dashboard/page.tsx
+            import { after } from "next/server";
 
-export default function DashboardPage() {
-  // Lên lịch chạy sau khi response được gửi
-  after(async () => {
-    await logPageView("/dashboard");
-    await syncAnalytics();
-  });
+            export default function DashboardPage() {
+              // Lên lịch chạy sau khi response được gửi
+              after(async () => {
+                await logPageView("/dashboard");
+                await syncAnalytics();
+              });
 
-  // Response được gửi ngay — không bị chặn
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Nội dung hiển thị ngay lập tức</p>
-    </div>
-  );
-}
+              // Response được gửi ngay — không bị chặn
+              return (
+                <div>
+                  <h1>Dashboard</h1>
+                  <p>Nội dung hiển thị ngay lập tức</p>
+                </div>
+              );
+            }
 
-async function logPageView(path: string) {
-  console.log(\`[LOG] Page viewed: \${path}\`);
-}
+            async function logPageView(path: string) {
+              console.log(\`[LOG] Page viewed: \${path}\`);
+            }
 
-async function syncAnalytics() {
-  // Gửi data đến analytics service
-  console.log("[ANALYTICS] Syncing...");
-}`}</code>
-        </pre>
+            async function syncAnalytics() {
+              // Gửi data đến analytics service
+              console.log("[ANALYTICS] Syncing...");
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Ví dụ trong Server Action */}
@@ -132,32 +136,34 @@ async function syncAnalytics() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Ví dụ 2: Trong Server Action
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`"use server";
+        <CodeBlock>
+          {`
+            "use server";
 
-import { after } from "next/server";
+            import { after } from "next/server";
 
-export async function createPost(formData: FormData) {
-  const title = formData.get("title") as string;
+            export async function createPost(formData: FormData) {
+              const title = formData.get("title") as string;
 
-  // Tạo bài viết trong database
-  const post = await db.post.create({
-    data: { title },
-  });
+              // Tạo bài viết trong database
+              const post = await db.post.create({
+                data: { title },
+              });
 
-  // Sau khi response gửi xong, thực hiện các tác vụ phụ
-  after(async () => {
-    // Gửi notification
-    await sendNotification(\`Bài viết "\${title}" đã được tạo\`);
-    // Cập nhật search index
-    await updateSearchIndex(post.id);
-    // Ghi audit log
-    await auditLog("post.created", { postId: post.id });
-  });
+              // Sau khi response gửi xong, thực hiện các tác vụ phụ
+              after(async () => {
+                // Gửi notification
+                await sendNotification(\`Bài viết "\${title}" đã được tạo\`);
+                // Cập nhật search index
+                await updateSearchIndex(post.id);
+                // Ghi audit log
+                await auditLog("post.created", { postId: post.id });
+              });
 
-  return { success: true, post };
-}`}</code>
-        </pre>
+              return { success: true, post };
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Ví dụ trong Route Handler */}
@@ -165,26 +171,28 @@ export async function createPost(formData: FormData) {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Ví dụ 3: Trong Route Handler
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/api/users/route.ts
-import { NextResponse } from "next/server";
-import { after } from "next/server";
+        <CodeBlock>
+          {`
+            // app/api/users/route.ts
+            import { NextResponse } from "next/server";
+            import { after } from "next/server";
 
-export async function POST(request: Request) {
-  const data = await request.json();
+            export async function POST(request: Request) {
+              const data = await request.json();
 
-  // Tạo user
-  const user = await createUser(data);
+              // Tạo user
+              const user = await createUser(data);
 
-  // Chạy sau khi response gửi xong
-  after(async () => {
-    await sendWelcomeEmail(user.email);
-    await trackSignup(user.id);
-  });
+              // Chạy sau khi response gửi xong
+              after(async () => {
+                await sendWelcomeEmail(user.email);
+                await trackSignup(user.id);
+              });
 
-  return NextResponse.json(user, { status: 201 });
-}`}</code>
-        </pre>
+              return NextResponse.json(user, { status: 201 });
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Lưu ý quan trọng */}

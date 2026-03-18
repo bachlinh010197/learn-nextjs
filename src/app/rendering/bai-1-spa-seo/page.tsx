@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -78,21 +79,23 @@ export default function Bai1Page() {
         <p className="mb-3 text-slate-300">
           Đây là HTML mà search engine nhận được khi crawl một SPA React:
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`<!DOCTYPE html>
-<html>
-  <head>
-    <title>My React App</title>
-  </head>
-  <body>
-    <!-- Đây là tất cả những gì bot thấy! -->
-    <div id="root"></div>
+        <CodeBlock>
+          {`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>My React App</title>
+              </head>
+              <body>
+                <!-- Đây là tất cả những gì bot thấy! -->
+                <div id="root"></div>
 
-    <!-- JS sẽ render nội dung sau khi tải -->
-    <script src="/static/js/bundle.js"></script>
-  </body>
-</html>`}</code>
-        </pre>
+                <!-- JS sẽ render nội dung sau khi tải -->
+                <script src="/static/js/bundle.js"></script>
+              </body>
+            </html>
+          `}
+        </CodeBlock>
         <p className="mt-3 text-sm text-slate-400">
           👆 Bot chỉ thấy một <code>&lt;div&gt;</code> trống. Không có nội dung,
           không có heading, không có text để index.
@@ -107,33 +110,35 @@ export default function Bai1Page() {
         <p className="mb-3 text-slate-300">
           Khi sử dụng Next.js, server trả về HTML đã có sẵn nội dung:
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`<!DOCTYPE html>
-<html>
-  <head>
-    <title>Trang Sản Phẩm | My Shop</title>
-    <meta name="description" content="Xem 100+ sản phẩm..." />
-  </head>
-  <body>
-    <div id="root">
-      <!-- Nội dung đã được render sẵn! -->
-      <h1>Danh sách sản phẩm</h1>
-      <div class="product-grid">
-        <div class="product">
-          <h2>iPhone 15 Pro</h2>
-          <p>Giá: 28.990.000đ</p>
-        </div>
-        <div class="product">
-          <h2>Samsung Galaxy S24</h2>
-          <p>Giá: 22.990.000đ</p>
-        </div>
-        <!-- ... -->
-      </div>
-    </div>
-    <script src="/_next/static/chunks/main.js"></script>
-  </body>
-</html>`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Trang Sản Phẩm | My Shop</title>
+                <meta name="description" content="Xem 100+ sản phẩm..." />
+              </head>
+              <body>
+                <div id="root">
+                  <!-- Nội dung đã được render sẵn! -->
+                  <h1>Danh sách sản phẩm</h1>
+                  <div class="product-grid">
+                    <div class="product">
+                      <h2>iPhone 15 Pro</h2>
+                      <p>Giá: 28.990.000đ</p>
+                    </div>
+                    <div class="product">
+                      <h2>Samsung Galaxy S24</h2>
+                      <p>Giá: 22.990.000đ</p>
+                    </div>
+                    <!-- ... -->
+                  </div>
+                </div>
+                <script src="/_next/static/chunks/main.js"></script>
+              </body>
+            </html>
+          `}
+        </CodeBlock>
         <p className="mt-3 text-sm text-slate-400">
           👆 Bot thấy ngay nội dung đầy đủ — headings, text, metadata. Trang
           được index nhanh và chính xác.

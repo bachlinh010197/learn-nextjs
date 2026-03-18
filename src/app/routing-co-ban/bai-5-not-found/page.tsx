@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CodeBlock } from '@/components/CodeBlock';
 
 export default function Bai5NotFoundPage() {
   return (
@@ -23,20 +24,22 @@ export default function Bai5NotFoundPage() {
         <h2 className="mb-3 text-xl font-semibold text-white">
           Tạo trang not-found.tsx
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/not-found.tsx (hoặc app/blog/not-found.tsx)
-import Link from "next/link";
+        <CodeBlock>
+          {`
+            // app/not-found.tsx (hoặc app/blog/not-found.tsx)
+            import Link from "next/link";
 
-export default function NotFound() {
-  return (
-    <div>
-      <h2>Không tìm thấy trang</h2>
-      <p>Trang bạn đang tìm không tồn tại.</p>
-      <Link href="/">Về trang chủ</Link>
-    </div>
-  );
-}`}</code>
-        </pre>
+            export default function NotFound() {
+              return (
+                <div>
+                  <h2>Không tìm thấy trang</h2>
+                  <p>Trang bạn đang tìm không tồn tại.</p>
+                  <Link href="/">Về trang chủ</Link>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -54,35 +57,37 @@ export default function NotFound() {
           </code>
           . Thường dùng khi fetch data không tìm thấy kết quả.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/blog/[slug]/page.tsx
-import { notFound } from "next/navigation";
+        <CodeBlock>
+          {`
+            // app/blog/[slug]/page.tsx
+            import { notFound } from "next/navigation";
 
-async function getPost(slug: string) {
-  const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
-  if (!res.ok) return null;
-  return res.json();
-}
+            async function getPost(slug: string) {
+              const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
+              if (!res.ok) return null;
+              return res.json();
+            }
 
-export default async function BlogPost({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = await getPost(params.slug);
+            export default async function BlogPost({
+              params,
+            }: {
+              params: { slug: string };
+            }) {
+              const post = await getPost(params.slug);
 
-  if (!post) {
-    notFound(); // → Hiển thị not-found.tsx gần nhất
-  }
+              if (!post) {
+                notFound(); // → Hiển thị not-found.tsx gần nhất
+              }
 
-  return (
-    <article>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-    </article>
-  );
-}`}</code>
-        </pre>
+              return (
+                <article>
+                  <h1>{post.title}</h1>
+                  <p>{post.content}</p>
+                </article>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -97,18 +102,20 @@ export default async function BlogPost({
           gần nhất trong cây thư mục. Bạn có thể có not-found.tsx khác nhau cho
           từng section:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-├── not-found.tsx           → 404 mặc định cho toàn app
-├── blog/
-│   ├── not-found.tsx       → 404 riêng cho /blog/*
-│   └── [slug]/
-│       └── page.tsx
-└── shop/
-    ├── not-found.tsx       → 404 riêng cho /shop/*
-    └── [id]/
-        └── page.tsx`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            ├── not-found.tsx           → 404 mặc định cho toàn app
+            ├── blog/
+            │   ├── not-found.tsx       → 404 riêng cho /blog/*
+            │   └── [slug]/
+            │       └── page.tsx
+            └── shop/
+                ├── not-found.tsx       → 404 riêng cho /shop/*
+                └── [id]/
+                    └── page.tsx
+          `}
+        </CodeBlock>
       </section>
 
       <section className="rounded-lg border border-purple-800 bg-purple-900/30 p-4">

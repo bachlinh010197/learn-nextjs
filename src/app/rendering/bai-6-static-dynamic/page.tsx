@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -31,19 +32,21 @@ export default async function Bai6Page() {
           tại <strong>build time</strong> (hoặc sau revalidation). Kết quả được
           cache và có thể serve từ CDN.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// ✅ Static Rendering - tự động vì không có dynamic APIs
-export default async function AboutPage() {
-  // Fetch này được cache mặc định
-  const res = await fetch("https://api.example.com/about");
-  const data = await res.json();
+        <CodeBlock>
+          {`
+            // ✅ Static Rendering - tự động vì không có dynamic APIs
+            export default async function AboutPage() {
+              // Fetch này được cache mặc định
+              const res = await fetch("https://api.example.com/about");
+              const data = await res.json();
 
-  return <div>{data.content}</div>;
-}
+              return <div>{data.content}</div>;
+            }
 
-// Kết quả: HTML được tạo lúc build
-// → Trang load cực nhanh từ CDN`}</code>
-        </pre>
+            // Kết quả: HTML được tạo lúc build
+            // → Trang load cực nhanh từ CDN
+          `}
+        </CodeBlock>
 
         <div className="rounded-lg border border-emerald-800 bg-emerald-900/30 p-4">
           <p className="text-sm text-emerald-300">
@@ -84,27 +87,29 @@ export default async function AboutPage() {
           </li>
         </ul>
 
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// 🔄 Dynamic Rendering - vì dùng cookies()
-import { cookies } from "next/headers";
+        <CodeBlock>
+          {`
+            // 🔄 Dynamic Rendering - vì dùng cookies()
+            import { cookies } from "next/headers";
 
-export default async function DashboardPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth-token");
+            export default async function DashboardPage() {
+              const cookieStore = await cookies();
+              const token = cookieStore.get("auth-token");
 
-  // Fetch với no-store cũng trigger dynamic
-  const res = await fetch("https://api.example.com/user", {
-    cache: "no-store",
-    headers: { Authorization: \`Bearer \${token?.value}\` },
-  });
-  const user = await res.json();
+              // Fetch với no-store cũng trigger dynamic
+              const res = await fetch("https://api.example.com/user", {
+                cache: "no-store",
+                headers: { Authorization: \`Bearer \${token?.value}\` },
+              });
+              const user = await res.json();
 
-  return <div>Xin chào, {user.name}!</div>;
-}
+              return <div>Xin chào, {user.name}!</div>;
+            }
 
-// Kết quả: HTML được tạo mới cho mỗi request
-// → Dữ liệu luôn fresh, nhưng chậm hơn static`}</code>
-        </pre>
+            // Kết quả: HTML được tạo mới cho mỗi request
+            // → Dữ liệu luôn fresh, nhưng chậm hơn static
+          `}
+        </CodeBlock>
       </section>
 
       {/* How Next.js decides */}
@@ -175,16 +180,18 @@ export default async function DashboardPage() {
         <p className="mb-4 text-slate-300">
           Bạn có thể ghi đè quyết định tự động bằng route segment config:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// Ép buộc dynamic rendering
-export const dynamic = "force-dynamic";
+        <CodeBlock>
+          {`
+            // Ép buộc dynamic rendering
+            export const dynamic = "force-dynamic";
 
-// Ép buộc static rendering
-export const dynamic = "force-static";
+            // Ép buộc static rendering
+            export const dynamic = "force-static";
 
-// ISR: static nhưng revalidate mỗi 60 giây
-export const revalidate = 60;`}</code>
-        </pre>
+            // ISR: static nhưng revalidate mỗi 60 giây
+            export const revalidate = 60;
+          `}
+        </CodeBlock>
       </section>
 
       {/* Build output */}
@@ -196,17 +203,19 @@ export const revalidate = 60;`}</code>
           Khi chạy <code>next build</code>, Next.js sẽ hiển thị từng route với
           ký hiệu cho biết chiến lược rendering:
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`Route (app)                    Size    First Load JS
-┌ ○ /                          5.2 kB   89 kB
-├ ○ /about                     1.1 kB   85 kB
-├ λ /dashboard                 3.4 kB   87 kB
-├ ○ /blog                      2.1 kB   86 kB
-└ λ /api/users                 0 B      84 kB
+        <CodeBlock>
+          {`
+            Route (app)                    Size    First Load JS
+            ┌ ○ /                          5.2 kB   89 kB
+            ├ ○ /about                     1.1 kB   85 kB
+            ├ λ /dashboard                 3.4 kB   87 kB
+            ├ ○ /blog                      2.1 kB   86 kB
+            └ λ /api/users                 0 B      84 kB
 
-○  (Static)   prerendered as static content
-λ  (Dynamic)  server-rendered on demand`}</code>
-        </pre>
+            ○  (Static)   prerendered as static content
+            λ  (Dynamic)  server-rendered on demand
+          `}
+        </CodeBlock>
         <p className="mt-2 text-sm text-slate-400">
           <code>○</code> = Static (tạo sẵn lúc build), <code>λ</code> = Dynamic
           (render mỗi request).

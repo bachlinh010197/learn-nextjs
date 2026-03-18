@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai3LoadingPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -27,30 +29,34 @@ export default function Bai3LoadingPage() {
           . Next.js sẽ tự động hiển thị component này trong khi page đang được
           tải.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/dashboard/
-├── layout.tsx
-├── loading.tsx   ← Hiển thị khi page đang tải
-└── page.tsx`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/dashboard/
+            ├── layout.tsx
+            ├── loading.tsx   ← Hiển thị khi page đang tải
+            └── page.tsx
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
         <h2 className="mb-3 text-xl font-semibold text-white">
           Ví dụ loading.tsx
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/loading.tsx
-export default function Loading() {
-  return (
-    <div className="flex items-center justify-center py-20">
-      <div className="h-10 w-10 animate-spin rounded-full
-           border-4 border-slate-600 border-t-blue-500" />
-      <p className="ml-3">Đang tải...</p>
-    </div>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/dashboard/loading.tsx
+            export default function Loading() {
+              return (
+                <div className="flex items-center justify-center py-20">
+                  <div className="h-10 w-10 animate-spin rounded-full
+                       border-4 border-slate-600 border-t-blue-500" />
+                  <p className="ml-3">Đang tải...</p>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -60,14 +66,16 @@ export default function Loading() {
         <p className="mb-4 text-slate-300">
           Bên dưới, Next.js tự động bọc page trong React Suspense:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// Next.js tự động tạo cấu trúc này:
-<Layout>
-  <Suspense fallback={<Loading />}>
-    <Page />
-  </Suspense>
-</Layout>`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // Next.js tự động tạo cấu trúc này:
+            <Layout>
+              <Suspense fallback={<Loading />}>
+                <Page />
+              </Suspense>
+            </Layout>
+          `}
+        </CodeBlock>
         <p className="text-slate-300">
           Điều này có nghĩa là layout sẽ{' '}
           <strong>luôn hiển thị ngay lập tức</strong>, chỉ có phần page bên
@@ -83,23 +91,25 @@ export default function Loading() {
           Thay vì spinner đơn giản, bạn có thể tạo skeleton UI để trải nghiệm
           mượt mà hơn:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/loading.tsx — Skeleton
-export default function Loading() {
-  return (
-    <div className="space-y-4">
-      <div className="h-8 w-1/3 animate-pulse rounded bg-slate-600" />
-      <div className="h-4 w-2/3 animate-pulse rounded bg-slate-600" />
-      <div className="h-4 w-1/2 animate-pulse rounded bg-slate-600" />
-      <div className="grid grid-cols-3 gap-4 mt-6">
-        <div className="h-32 animate-pulse rounded bg-slate-600" />
-        <div className="h-32 animate-pulse rounded bg-slate-600" />
-        <div className="h-32 animate-pulse rounded bg-slate-600" />
-      </div>
-    </div>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/dashboard/loading.tsx — Skeleton
+            export default function Loading() {
+              return (
+                <div className="space-y-4">
+                  <div className="h-8 w-1/3 animate-pulse rounded bg-slate-600" />
+                  <div className="h-4 w-2/3 animate-pulse rounded bg-slate-600" />
+                  <div className="h-4 w-1/2 animate-pulse rounded bg-slate-600" />
+                  <div className="grid grid-cols-3 gap-4 mt-6">
+                    <div className="h-32 animate-pulse rounded bg-slate-600" />
+                    <div className="h-32 animate-pulse rounded bg-slate-600" />
+                    <div className="h-32 animate-pulse rounded bg-slate-600" />
+                  </div>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="rounded-lg border border-sky-800 bg-sky-900/30 p-4">

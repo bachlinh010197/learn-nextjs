@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai7Form() {
   return (
     <div className="prose prose-invert max-w-none">
@@ -16,54 +18,56 @@ export default function Bai7Form() {
         Server Action cho phép form gửi dữ liệu trực tiếp đến server mà không
         cần tạo API endpoint:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/actions.ts
-"use server";
+      <CodeBlock>
+        {`
+          // app/actions.ts
+          "use server";
 
-export async function createComment(formData: FormData) {
-  const content = formData.get("content") as string;
-  const postId = formData.get("postId") as string;
+          export async function createComment(formData: FormData) {
+            const content = formData.get("content") as string;
+            const postId = formData.get("postId") as string;
 
-  // Validate
-  if (!content || content.trim().length === 0) {
-    return { error: "Nội dung không được để trống" };
-  }
+            // Validate
+            if (!content || content.trim().length === 0) {
+              return { error: "Nội dung không được để trống" };
+            }
 
-  // Lưu vào database
-  await db.comment.create({
-    data: { content, postId },
-  });
+            // Lưu vào database
+            await db.comment.create({
+              data: { content, postId },
+            });
 
-  return { success: true };
-}
+            return { success: true };
+          }
 
-// app/blog/[slug]/page.tsx
-import { createComment } from "@/app/actions";
+          // app/blog/[slug]/page.tsx
+          import { createComment } from "@/app/actions";
 
-export default function BlogPost() {
-  return (
-    <div>
-      <h1>Bài viết</h1>
+          export default function BlogPost() {
+            return (
+              <div>
+                <h1>Bài viết</h1>
 
-      <form action={createComment}>
-        <input type="hidden" name="postId" value="123" />
-        <textarea
-          name="content"
-          placeholder="Viết bình luận..."
-          className="w-full rounded-lg border p-3"
-          required
-        />
-        <button
-          type="submit"
-          className="mt-2 rounded-lg bg-blue-500 px-4 py-2 text-white"
-        >
-          Gửi bình luận
-        </button>
-      </form>
-    </div>
-  );
-}`}</code>
-      </pre>
+                <form action={createComment}>
+                  <input type="hidden" name="postId" value="123" />
+                  <textarea
+                    name="content"
+                    placeholder="Viết bình luận..."
+                    className="w-full rounded-lg border p-3"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="mt-2 rounded-lg bg-blue-500 px-4 py-2 text-white"
+                  >
+                    Gửi bình luận
+                  </button>
+                </form>
+              </div>
+            );
+          }
+        `}
+      </CodeBlock>
 
       {/* --- useFormStatus --- */}
       <h2>2. useFormStatus - Trạng thái đang submit</h2>
@@ -71,45 +75,47 @@ export default function BlogPost() {
         Hook <code>useFormStatus</code> cho biết form đang được submit hay
         không. Phải dùng trong component con của <code>&lt;form&gt;</code>:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`"use client";
+      <CodeBlock>
+        {`
+          "use client";
 
-import { useFormStatus } from "react-dom";
+          import { useFormStatus } from "react-dom";
 
-// Component nút submit riêng
-function SubmitButton() {
-  const { pending } = useFormStatus();
+          // Component nút submit riêng
+          function SubmitButton() {
+            const { pending } = useFormStatus();
 
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-lg bg-blue-500 px-4 py-2 text-white
-                 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {pending ? "Đang gửi..." : "Gửi bình luận"}
-    </button>
-  );
-}
+            return (
+              <button
+                type="submit"
+                disabled={pending}
+                className="rounded-lg bg-blue-500 px-4 py-2 text-white
+                           disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {pending ? "Đang gửi..." : "Gửi bình luận"}
+              </button>
+            );
+          }
 
-// Sử dụng trong form
-import { createComment } from "@/app/actions";
+          // Sử dụng trong form
+          import { createComment } from "@/app/actions";
 
-export default function CommentForm() {
-  return (
-    <form action={createComment}>
-      <textarea
-        name="content"
-        placeholder="Viết bình luận..."
-        className="w-full rounded-lg border p-3"
-        required
-      />
-      {/* SubmitButton phải là CON của <form> */}
-      <SubmitButton />
-    </form>
-  );
-}`}</code>
-      </pre>
+          export default function CommentForm() {
+            return (
+              <form action={createComment}>
+                <textarea
+                  name="content"
+                  placeholder="Viết bình luận..."
+                  className="w-full rounded-lg border p-3"
+                  required
+                />
+                {/* SubmitButton phải là CON của <form> */}
+                <SubmitButton />
+              </form>
+            );
+          }
+        `}
+      </CodeBlock>
 
       <div className="rounded-lg border border-amber-800 bg-amber-900/30 p-4">
         <p className="m-0 text-sm">
@@ -125,117 +131,121 @@ export default function CommentForm() {
         <code>useActionState</code> (React 19) giúp quản lý state trả về từ
         Server Action, bao gồm cả lỗi validation:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/actions.ts
-"use server";
+      <CodeBlock>
+        {`
+          // app/actions.ts
+          "use server";
 
-export type FormState = {
-  message: string;
-  errors?: {
-    name?: string[];
-    email?: string[];
-  };
-};
+          export type FormState = {
+            message: string;
+            errors?: {
+              name?: string[];
+              email?: string[];
+            };
+          };
 
-export async function registerUser(
-  prevState: FormState,
-  formData: FormData
-): Promise<FormState> {
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
+          export async function registerUser(
+            prevState: FormState,
+            formData: FormData
+          ): Promise<FormState> {
+            const name = formData.get("name") as string;
+            const email = formData.get("email") as string;
 
-  // Validate
-  const errors: FormState["errors"] = {};
+            // Validate
+            const errors: FormState["errors"] = {};
 
-  if (!name || name.length < 2) {
-    errors.name = ["Tên phải có ít nhất 2 ký tự"];
-  }
+            if (!name || name.length < 2) {
+              errors.name = ["Tên phải có ít nhất 2 ký tự"];
+            }
 
-  if (!email || !email.includes("@")) {
-    errors.email = ["Email không hợp lệ"];
-  }
+            if (!email || !email.includes("@")) {
+              errors.email = ["Email không hợp lệ"];
+            }
 
-  if (Object.keys(errors).length > 0) {
-    return { message: "Lỗi validation", errors };
-  }
+            if (Object.keys(errors).length > 0) {
+              return { message: "Lỗi validation", errors };
+            }
 
-  // Lưu user vào database
-  await db.user.create({ data: { name, email } });
+            // Lưu user vào database
+            await db.user.create({ data: { name, email } });
 
-  return { message: "Đăng ký thành công!" };
-}`}</code>
-      </pre>
+            return { message: "Đăng ký thành công!" };
+          }
+        `}
+      </CodeBlock>
 
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/register/page.tsx
-"use client";
+      <CodeBlock>
+        {`
+          // app/register/page.tsx
+          "use client";
 
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
-import { registerUser, type FormState } from "@/app/actions";
+          import { useActionState } from "react";
+          import { useFormStatus } from "react-dom";
+          import { registerUser, type FormState } from "@/app/actions";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white
-                 disabled:opacity-50"
-    >
-      {pending ? "Đang đăng ký..." : "Đăng ký"}
-    </button>
-  );
-}
+          function SubmitButton() {
+            const { pending } = useFormStatus();
+            return (
+              <button
+                type="submit"
+                disabled={pending}
+                className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white
+                           disabled:opacity-50"
+              >
+                {pending ? "Đang đăng ký..." : "Đăng ký"}
+              </button>
+            );
+          }
 
-const initialState: FormState = { message: "" };
+          const initialState: FormState = { message: "" };
 
-export default function RegisterPage() {
-  const [state, formAction] = useActionState(registerUser, initialState);
+          export default function RegisterPage() {
+            const [state, formAction] = useActionState(registerUser, initialState);
 
-  return (
-    <form action={formAction} className="mx-auto max-w-md space-y-4">
-      <h1 className="text-2xl font-bold">Đăng ký tài khoản</h1>
+            return (
+              <form action={formAction} className="mx-auto max-w-md space-y-4">
+                <h1 className="text-2xl font-bold">Đăng ký tài khoản</h1>
 
-      {/* Thông báo thành công */}
-      {state.message && !state.errors && (
-        <p className="rounded-lg bg-emerald-900 p-3 text-emerald-400">
-          {state.message}
-        </p>
-      )}
+                {/* Thông báo thành công */}
+                {state.message && !state.errors && (
+                  <p className="rounded-lg bg-emerald-900 p-3 text-emerald-400">
+                    {state.message}
+                  </p>
+                )}
 
-      {/* Field: Tên */}
-      <div>
-        <label className="block text-sm font-medium">Họ và tên</label>
-        <input
-          name="name"
-          className="mt-1 w-full rounded-lg border p-2"
-          placeholder="Nguyễn Văn A"
-        />
-        {state.errors?.name && (
-          <p className="mt-1 text-sm text-red-500">{state.errors.name[0]}</p>
-        )}
-      </div>
+                {/* Field: Tên */}
+                <div>
+                  <label className="block text-sm font-medium">Họ và tên</label>
+                  <input
+                    name="name"
+                    className="mt-1 w-full rounded-lg border p-2"
+                    placeholder="Nguyễn Văn A"
+                  />
+                  {state.errors?.name && (
+                    <p className="mt-1 text-sm text-red-500">{state.errors.name[0]}</p>
+                  )}
+                </div>
 
-      {/* Field: Email */}
-      <div>
-        <label className="block text-sm font-medium">Email</label>
-        <input
-          name="email"
-          type="email"
-          className="mt-1 w-full rounded-lg border p-2"
-          placeholder="email@example.com"
-        />
-        {state.errors?.email && (
-          <p className="mt-1 text-sm text-red-500">{state.errors.email[0]}</p>
-        )}
-      </div>
+                {/* Field: Email */}
+                <div>
+                  <label className="block text-sm font-medium">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    className="mt-1 w-full rounded-lg border p-2"
+                    placeholder="email@example.com"
+                  />
+                  {state.errors?.email && (
+                    <p className="mt-1 text-sm text-red-500">{state.errors.email[0]}</p>
+                  )}
+                </div>
 
-      <SubmitButton />
-    </form>
-  );
-}`}</code>
-      </pre>
+                <SubmitButton />
+              </form>
+            );
+          }
+        `}
+      </CodeBlock>
 
       {/* --- useOptimistic --- */}
       <h2>4. Optimistic Updates với useOptimistic</h2>
@@ -243,150 +253,154 @@ export default function RegisterPage() {
         <code>useOptimistic</code> cho phép cập nhật UI ngay lập tức trước khi
         Server Action hoàn thành, tạo trải nghiệm nhanh chóng:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`"use client";
+      <CodeBlock>
+        {`
+          "use client";
 
-import { useOptimistic } from "react";
-import { useFormStatus } from "react-dom";
-import { addTodo } from "@/app/actions";
+          import { useOptimistic } from "react";
+          import { useFormStatus } from "react-dom";
+          import { addTodo } from "@/app/actions";
 
-interface Todo {
-  id: string;
-  text: string;
-  sending?: boolean; // Đánh dấu đang gửi
-}
+          interface Todo {
+            id: string;
+            text: string;
+            sending?: boolean; // Đánh dấu đang gửi
+          }
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
-    >
-      Thêm
-    </button>
-  );
-}
+          function SubmitButton() {
+            const { pending } = useFormStatus();
+            return (
+              <button
+                type="submit"
+                disabled={pending}
+                className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
+              >
+                Thêm
+              </button>
+            );
+          }
 
-export default function TodoList({ todos }: { todos: Todo[] }) {
-  const [optimisticTodos, addOptimisticTodo] = useOptimistic(
-    todos,
-    (state: Todo[], newTodo: string) => [
-      ...state,
-      { id: "temp-" + Date.now(), text: newTodo, sending: true },
-    ]
-  );
+          export default function TodoList({ todos }: { todos: Todo[] }) {
+            const [optimisticTodos, addOptimisticTodo] = useOptimistic(
+              todos,
+              (state: Todo[], newTodo: string) => [
+                ...state,
+                { id: "temp-" + Date.now(), text: newTodo, sending: true },
+              ]
+            );
 
-  async function handleAddTodo(formData: FormData) {
-    const text = formData.get("text") as string;
+            async function handleAddTodo(formData: FormData) {
+              const text = formData.get("text") as string;
 
-    // Cập nhật UI ngay lập tức (optimistic)
-    addOptimisticTodo(text);
+              // Cập nhật UI ngay lập tức (optimistic)
+              addOptimisticTodo(text);
 
-    // Gửi đến server
-    await addTodo(formData);
-  }
+              // Gửi đến server
+              await addTodo(formData);
+            }
 
-  return (
-    <div className="mx-auto max-w-md">
-      <h1 className="mb-4 text-2xl font-bold">Danh sách việc cần làm</h1>
+            return (
+              <div className="mx-auto max-w-md">
+                <h1 className="mb-4 text-2xl font-bold">Danh sách việc cần làm</h1>
 
-      {/* Danh sách todos */}
-      <ul className="mb-4 space-y-2">
-        {optimisticTodos.map((todo) => (
-          <li
-            key={todo.id}
-            className={\`rounded-lg border p-3 \${
-              todo.sending ? "opacity-50" : ""
-            }\`}
-          >
-            {todo.text}
-            {todo.sending && (
-              <span className="ml-2 text-sm text-gray-400">
-                Đang gửi...
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+                {/* Danh sách todos */}
+                <ul className="mb-4 space-y-2">
+                  {optimisticTodos.map((todo) => (
+                    <li
+                      key={todo.id}
+                      className={\`rounded-lg border p-3 \${
+                        todo.sending ? "opacity-50" : ""
+                      }\`}
+                    >
+                      {todo.text}
+                      {todo.sending && (
+                        <span className="ml-2 text-sm text-gray-400">
+                          Đang gửi...
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
 
-      {/* Form thêm todo */}
-      <form action={handleAddTodo} className="flex gap-2">
-        <input
-          name="text"
-          placeholder="Việc cần làm..."
-          className="flex-1 rounded-lg border p-2"
-          required
-        />
-        <SubmitButton />
-      </form>
-    </div>
-  );
-}`}</code>
-      </pre>
+                {/* Form thêm todo */}
+                <form action={handleAddTodo} className="flex gap-2">
+                  <input
+                    name="text"
+                    placeholder="Việc cần làm..."
+                    className="flex-1 rounded-lg border p-2"
+                    required
+                  />
+                  <SubmitButton />
+                </form>
+              </div>
+            );
+          }
+        `}
+      </CodeBlock>
 
       {/* --- Ví dụ Like button --- */}
       <h2>5. Ví dụ: Nút Like với Optimistic Update</h2>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/actions.ts
-"use server";
+      <CodeBlock>
+        {`
+          // app/actions.ts
+          "use server";
 
-export async function toggleLike(postId: string) {
-  // Giả lập delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+          export async function toggleLike(postId: string) {
+            // Giả lập delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  // Toggle like trong database
-  // await db.like.toggle({ postId, userId: currentUser.id });
-}
+            // Toggle like trong database
+            // await db.like.toggle({ postId, userId: currentUser.id });
+          }
 
-// components/LikeButton.tsx
-"use client";
+          // components/LikeButton.tsx
+          "use client";
 
-import { useOptimistic, useTransition } from "react";
-import { toggleLike } from "@/app/actions";
+          import { useOptimistic, useTransition } from "react";
+          import { toggleLike } from "@/app/actions";
 
-export default function LikeButton({
-  postId,
-  initialLiked,
-  initialCount,
-}: {
-  postId: string;
-  initialLiked: boolean;
-  initialCount: number;
-}) {
-  const [isPending, startTransition] = useTransition();
+          export default function LikeButton({
+            postId,
+            initialLiked,
+            initialCount,
+          }: {
+            postId: string;
+            initialLiked: boolean;
+            initialCount: number;
+          }) {
+            const [isPending, startTransition] = useTransition();
 
-  const [optimistic, setOptimistic] = useOptimistic(
-    { liked: initialLiked, count: initialCount },
-    (state, _action: void) => ({
-      liked: !state.liked,
-      count: state.liked ? state.count - 1 : state.count + 1,
-    })
-  );
+            const [optimistic, setOptimistic] = useOptimistic(
+              { liked: initialLiked, count: initialCount },
+              (state, _action: void) => ({
+                liked: !state.liked,
+                count: state.liked ? state.count - 1 : state.count + 1,
+              })
+            );
 
-  function handleClick() {
-    startTransition(async () => {
-      setOptimistic(undefined);
-      await toggleLike(postId);
-    });
-  }
+            function handleClick() {
+              startTransition(async () => {
+                setOptimistic(undefined);
+                await toggleLike(postId);
+              });
+            }
 
-  return (
-    <button
-      onClick={handleClick}
-      disabled={isPending}
-      className={\`flex items-center gap-2 rounded-full px-4 py-2 transition-colors \${
-        optimistic.liked
-          ? "bg-red-100 text-red-400"
-          : "bg-gray-100 text-gray-600"
-      }\`}
-    >
-      {optimistic.liked ? "❤️" : "🤍"} {optimistic.count}
-    </button>
-  );
-}`}</code>
-      </pre>
+            return (
+              <button
+                onClick={handleClick}
+                disabled={isPending}
+                className={\`flex items-center gap-2 rounded-full px-4 py-2 transition-colors \${
+                  optimistic.liked
+                    ? "bg-red-100 text-red-400"
+                    : "bg-gray-100 text-gray-600"
+                }\`}
+              >
+                {optimistic.liked ? "❤️" : "🤍"} {optimistic.count}
+              </button>
+            );
+          }
+        `}
+      </CodeBlock>
 
       {/* --- Tổng kết --- */}
       <h2>Tổng kết</h2>

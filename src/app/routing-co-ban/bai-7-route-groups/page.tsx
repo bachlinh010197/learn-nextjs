@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CodeBlock } from '@/components/CodeBlock';
 
 export default function Bai7RouteGroupsPage() {
   return (
@@ -26,22 +27,24 @@ export default function Bai7RouteGroupsPage() {
           </code>
           . Thư mục này sẽ bị bỏ qua trong URL:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-├── (marketing)/
-│   ├── layout.tsx      → Layout riêng cho marketing pages
-│   ├── about/
-│   │   └── page.tsx    → /about (KHÔNG phải /marketing/about)
-│   └── contact/
-│       └── page.tsx    → /contact
-├── (shop)/
-│   ├── layout.tsx      → Layout riêng cho shop pages
-│   ├── products/
-│   │   └── page.tsx    → /products
-│   └── cart/
-│       └── page.tsx    → /cart
-└── page.tsx            → /`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            ├── (marketing)/
+            │   ├── layout.tsx      → Layout riêng cho marketing pages
+            │   ├── about/
+            │   │   └── page.tsx    → /about (KHÔNG phải /marketing/about)
+            │   └── contact/
+            │       └── page.tsx    → /contact
+            ├── (shop)/
+            │   ├── layout.tsx      → Layout riêng cho shop pages
+            │   ├── products/
+            │   │   └── page.tsx    → /products
+            │   └── cart/
+            │       └── page.tsx    → /cart
+            └── page.tsx            → /
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -68,35 +71,37 @@ export default function Bai7RouteGroupsPage() {
         <h2 className="mb-3 text-xl font-semibold text-white">
           Ví dụ: Layout riêng cho mỗi group
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/(marketing)/layout.tsx
-export default function MarketingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <nav>Marketing Nav: Home | About | Contact</nav>
-      <main>{children}</main>
-    </div>
-  );
-}
+        <CodeBlock>
+          {`
+            // app/(marketing)/layout.tsx
+            export default function MarketingLayout({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              return (
+                <div>
+                  <nav>Marketing Nav: Home | About | Contact</nav>
+                  <main>{children}</main>
+                </div>
+              );
+            }
 
-// app/(shop)/layout.tsx
-export default function ShopLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <nav>Shop Nav: Products | Cart | Account</nav>
-      <main>{children}</main>
-    </div>
-  );
-}`}</code>
-        </pre>
+            // app/(shop)/layout.tsx
+            export default function ShopLayout({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              return (
+                <div>
+                  <nav>Shop Nav: Products | Cart | Account</nav>
+                  <main>{children}</main>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="rounded-lg border border-amber-800 bg-amber-900/30 p-4">

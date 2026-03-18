@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -74,50 +75,54 @@ export default async function Bai9Page() {
           Chỉ cần thêm <code>export const revalidate = N</code> vào page hoặc
           layout:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/products/page.tsx
+        <CodeBlock>
+          {`
+            // app/products/page.tsx
 
-// Revalidate mỗi 60 giây
-export const revalidate = 60;
+            // Revalidate mỗi 60 giây
+            export const revalidate = 60;
 
-export default async function ProductsPage() {
-  // Fetch được cache và revalidate theo revalidate config
-  const res = await fetch("https://api.example.com/products");
-  const products = await res.json();
+            export default async function ProductsPage() {
+              // Fetch được cache và revalidate theo revalidate config
+              const res = await fetch("https://api.example.com/products");
+              const products = await res.json();
 
-  return (
-    <div>
-      <h1>Sản phẩm</h1>
-      <p>Cập nhật lúc: {new Date().toLocaleString("vi-VN")}</p>
-      <ul>
-        {products.map((p) => (
-          <li key={p.id}>{p.name} - {p.price}đ</li>
-        ))}
-      </ul>
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <h1>Sản phẩm</h1>
+                  <p>Cập nhật lúc: {new Date().toLocaleString("vi-VN")}</p>
+                  <ul>
+                    {products.map((p) => (
+                      <li key={p.id}>{p.name} - {p.price}đ</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
 
         <h3 className="mb-2 text-lg font-medium text-slate-300">
           Hoặc revalidate ở mức fetch:
         </h3>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// Revalidate từng fetch riêng biệt
-const res = await fetch("https://api.example.com/products", {
-  next: { revalidate: 60 }, // Cache 60 giây
-});
+        <CodeBlock>
+          {`
+            // Revalidate từng fetch riêng biệt
+            const res = await fetch("https://api.example.com/products", {
+              next: { revalidate: 60 }, // Cache 60 giây
+            });
 
-// Kết hợp: page revalidate 120s, nhưng fetch này revalidate 30s
-export const revalidate = 120;
+            // Kết hợp: page revalidate 120s, nhưng fetch này revalidate 30s
+            export const revalidate = 120;
 
-const fastData = await fetch("https://api.example.com/fast", {
-  next: { revalidate: 30 }, // Override: 30s cho fetch này
-});
+            const fastData = await fetch("https://api.example.com/fast", {
+              next: { revalidate: 30 }, // Override: 30s cho fetch này
+            });
 
-const slowData = await fetch("https://api.example.com/slow");
-// Dùng page-level revalidate: 120s`}</code>
-        </pre>
+            const slowData = await fetch("https://api.example.com/slow");
+            // Dùng page-level revalidate: 120s
+          `}
+        </CodeBlock>
       </section>
 
       {/* Live demo */}
@@ -162,38 +167,40 @@ const slowData = await fetch("https://api.example.com/slow");
           Ngoài time-based revalidation, bạn có thể trigger revalidation thủ
           công (ví dụ: khi CMS publish bài mới):
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// app/api/revalidate/route.ts
-import { revalidatePath, revalidateTag } from "next/cache";
-import { NextRequest } from "next/server";
+        <CodeBlock>
+          {`
+            // app/api/revalidate/route.ts
+            import { revalidatePath, revalidateTag } from "next/cache";
+            import { NextRequest } from "next/server";
 
-export async function POST(request: NextRequest) {
-  const { path, tag } = await request.json();
+            export async function POST(request: NextRequest) {
+              const { path, tag } = await request.json();
 
-  // Revalidate theo path
-  if (path) {
-    revalidatePath(path);
-    return Response.json({ revalidated: true, path });
-  }
+              // Revalidate theo path
+              if (path) {
+                revalidatePath(path);
+                return Response.json({ revalidated: true, path });
+              }
 
-  // Revalidate theo tag
-  if (tag) {
-    revalidateTag(tag);
-    return Response.json({ revalidated: true, tag });
-  }
+              // Revalidate theo tag
+              if (tag) {
+                revalidateTag(tag);
+                return Response.json({ revalidated: true, tag });
+              }
 
-  return Response.json({ error: "Missing path or tag" }, { status: 400 });
-}
+              return Response.json({ error: "Missing path or tag" }, { status: 400 });
+            }
 
-// Sử dụng tag trong fetch:
-const res = await fetch("https://api.example.com/posts", {
-  next: { tags: ["posts"] },
-});
+            // Sử dụng tag trong fetch:
+            const res = await fetch("https://api.example.com/posts", {
+              next: { tags: ["posts"] },
+            });
 
-// Trigger revalidation:
-// POST /api/revalidate { "tag": "posts" }
-// → Tất cả pages dùng tag "posts" sẽ được regenerate`}</code>
-        </pre>
+            // Trigger revalidation:
+            // POST /api/revalidate { "tag": "posts" }
+            // → Tất cả pages dùng tag "posts" sẽ được regenerate
+          `}
+        </CodeBlock>
       </section>
 
       {/* Comparison */}

@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,22 +22,22 @@ export default function Bai3RequestMemoization() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Cách hoạt động
         </h2>
-        <div className="mb-6 overflow-x-auto rounded-xl bg-zinc-900 p-6 text-sm text-zinc-100">
-          <pre>
-            <code>{`Render Pass (1 lần server render)
-│
-├── ComponentA
-│   └── fetch('/api/user') ──────┐
-│                                │  Cùng URL + options
-├── ComponentB                   ├──→ Chỉ 1 request thực sự
-│   └── fetch('/api/user') ──────┘    được gửi đi!
-│
-├── ComponentC
-│   └── fetch('/api/posts') ─────→ Request riêng (URL khác)
-│
-└── Kết quả: 2 request thay vì 3`}</code>
-          </pre>
-        </div>
+        <CodeBlock>
+          {`
+            Render Pass (1 lần server render)
+            │
+            ├── ComponentA
+            │   └── fetch('/api/user') ──────┐
+            │                                │  Cùng URL + options
+            ├── ComponentB                   ├──→ Chỉ 1 request thực sự
+            │   └── fetch('/api/user') ──────┘    được gửi đi!
+            │
+            ├── ComponentC
+            │   └── fetch('/api/posts') ─────→ Request riêng (URL khác)
+            │
+            └── Kết quả: 2 request thay vì 3
+          `}
+        </CodeBlock>
         <div className="space-y-3 text-slate-300">
           <p>
             Khi React render một component tree trên server, nếu nhiều component
@@ -72,60 +73,62 @@ export default function Bai3RequestMemoization() {
           sidebar và nội dung chính. Thay vì truyền dữ liệu qua props (prop
           drilling), bạn có thể fetch trực tiếp trong mỗi component:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// lib/data.ts
-export async function getUser() {
-  // Request này sẽ được memoize tự động!
-  const res = await fetch('https://api.example.com/user');
-  return res.json();
-}
+        <CodeBlock>
+          {`
+            // lib/data.ts
+            export async function getUser() {
+              // Request này sẽ được memoize tự động!
+              const res = await fetch('https://api.example.com/user');
+              return res.json();
+            }
 
-// components/Header.tsx
-import { getUser } from '@/lib/data';
+            // components/Header.tsx
+            import { getUser } from '@/lib/data';
 
-export default async function Header() {
-  const user = await getUser(); // fetch lần 1
+            export default async function Header() {
+              const user = await getUser(); // fetch lần 1
 
-  return (
-    <header>
-      <span>Xin chào, {user.name}!</span>
-    </header>
-  );
-}
+              return (
+                <header>
+                  <span>Xin chào, {user.name}!</span>
+                </header>
+              );
+            }
 
-// components/Sidebar.tsx
-import { getUser } from '@/lib/data';
+            // components/Sidebar.tsx
+            import { getUser } from '@/lib/data';
 
-export default async function Sidebar() {
-  const user = await getUser(); // fetch lần 2 — KHÔNG gửi request mới!
+            export default async function Sidebar() {
+              const user = await getUser(); // fetch lần 2 — KHÔNG gửi request mới!
 
-  return (
-    <aside>
-      <img src={user.avatar} alt={user.name} />
-      <p>{user.email}</p>
-    </aside>
-  );
-}
+              return (
+                <aside>
+                  <img src={user.avatar} alt={user.name} />
+                  <p>{user.email}</p>
+                </aside>
+              );
+            }
 
-// app/dashboard/page.tsx
-import { getUser } from '@/lib/data';
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
+            // app/dashboard/page.tsx
+            import { getUser } from '@/lib/data';
+            import Header from '@/components/Header';
+            import Sidebar from '@/components/Sidebar';
 
-export default async function DashboardPage() {
-  const user = await getUser(); // fetch lần 3 — vẫn dùng kết quả memoize!
+            export default async function DashboardPage() {
+              const user = await getUser(); // fetch lần 3 — vẫn dùng kết quả memoize!
 
-  return (
-    <div>
-      <Header />
-      <Sidebar />
-      <main>
-        <h1>Dashboard của {user.name}</h1>
-      </main>
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <Header />
+                  <Sidebar />
+                  <main>
+                    <h1>Dashboard của {user.name}</h1>
+                  </main>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
         <div className="rounded-lg border border-emerald-800 bg-emerald-900/30 p-4 text-sm text-emerald-300">
           <strong>✅ Kết quả:</strong> Dù <code>getUser()</code> được gọi 3 lần
           trong 3 component khác nhau, chỉ có <strong>1 request</strong> thực sự
@@ -180,23 +183,25 @@ export default async function DashboardPage() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Lưu ý quan trọng
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// ⚠️ Hai request này KHÔNG được memoize vì options khác nhau:
-fetch('https://api.example.com/data', { cache: 'force-cache' });
-fetch('https://api.example.com/data', { cache: 'no-store' });
+        <CodeBlock>
+          {`
+            // ⚠️ Hai request này KHÔNG được memoize vì options khác nhau:
+            fetch('https://api.example.com/data', { cache: 'force-cache' });
+            fetch('https://api.example.com/data', { cache: 'no-store' });
 
-// ⚠️ Hai request này KHÔNG được memoize vì headers khác nhau:
-fetch('https://api.example.com/data', {
-  headers: { 'X-Custom': 'value-1' },
-});
-fetch('https://api.example.com/data', {
-  headers: { 'X-Custom': 'value-2' },
-});
+            // ⚠️ Hai request này KHÔNG được memoize vì headers khác nhau:
+            fetch('https://api.example.com/data', {
+              headers: { 'X-Custom': 'value-1' },
+            });
+            fetch('https://api.example.com/data', {
+              headers: { 'X-Custom': 'value-2' },
+            });
 
-// ✅ Hai request này ĐƯỢC memoize vì hoàn toàn giống nhau:
-fetch('https://api.example.com/data');
-fetch('https://api.example.com/data');`}</code>
-        </pre>
+            // ✅ Hai request này ĐƯỢC memoize vì hoàn toàn giống nhau:
+            fetch('https://api.example.com/data');
+            fetch('https://api.example.com/data');
+          `}
+        </CodeBlock>
         <div className="rounded-lg border border-amber-800 bg-amber-900/30 p-4 text-sm text-amber-300">
           <strong>⚠️ Nhớ:</strong> Request Memoization chỉ tồn tại trong 1 lần
           render. Nó không cache dữ liệu giữa các request từ các user khác nhau.

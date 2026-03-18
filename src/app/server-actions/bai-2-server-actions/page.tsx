@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import { getTodos } from './actions';
 import TodoForm from './TodoForm';
 
@@ -40,20 +41,22 @@ export default async function Bai2ServerActions() {
         </p>
         <div className="rounded-lg bg-zinc-900 p-4 text-sm">
           <p className="mb-2 text-xs text-zinc-400">📄 actions.ts</p>
-          <pre className="text-green-400">
-            {`"use server";
+          <CodeBlock>
+            {`
+              "use server";
 
-import { revalidatePath } from "next/cache";
+              import { revalidatePath } from "next/cache";
 
-export async function addTodo(formData: FormData) {
-  const title = formData.get("title") as string;
+              export async function addTodo(formData: FormData) {
+                const title = formData.get("title") as string;
 
-  // Lưu vào database...
-  
-  // Revalidate để cập nhật UI
-  revalidatePath("/server-actions/bai-2-server-actions");
-}`}
-          </pre>
+                // Lưu vào database...
+                
+                // Revalidate để cập nhật UI
+                revalidatePath("/server-actions/bai-2-server-actions");
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -69,20 +72,22 @@ export async function addTodo(formData: FormData) {
         </p>
         <div className="rounded-lg bg-zinc-900 p-4 text-sm">
           <p className="mb-2 text-xs text-zinc-400">📄 TodoForm.tsx</p>
-          <pre className="text-green-400">
-            {`"use client";
+          <CodeBlock>
+            {`
+              "use client";
 
-import { addTodo } from "./actions";
+              import { addTodo } from "./actions";
 
-export default function TodoForm() {
-  return (
-    <form action={addTodo}>
-      <input type="text" name="title" />
-      <button type="submit">Thêm</button>
-    </form>
-  );
-}`}
-          </pre>
+              export default function TodoForm() {
+                return (
+                  <form action={addTodo}>
+                    <input type="text" name="title" />
+                    <button type="submit">Thêm</button>
+                  </form>
+                );
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -97,24 +102,26 @@ export default function TodoForm() {
           Next.js cập nhật lại cache và hiển thị dữ liệu mới.
         </p>
         <div className="rounded-lg bg-zinc-900 p-4 text-sm">
-          <pre className="text-green-400">
-            {`"use server";
+          <CodeBlock>
+            {`
+              "use server";
 
-import { revalidatePath } from "next/cache";
-import { revalidateTag } from "next/cache";
+              import { revalidatePath } from "next/cache";
+              import { revalidateTag } from "next/cache";
 
-export async function deleteTodo(formData: FormData) {
-  const id = formData.get("id");
-  
-  // Xoá từ database...
+              export async function deleteTodo(formData: FormData) {
+                const id = formData.get("id");
+                
+                // Xoá từ database...
 
-  // Cách 1: Revalidate theo path
-  revalidatePath("/server-actions/bai-2-server-actions");
+                // Cách 1: Revalidate theo path
+                revalidatePath("/server-actions/bai-2-server-actions");
 
-  // Cách 2: Revalidate theo tag
-  // revalidateTag("todos");
-}`}
-          </pre>
+                // Cách 2: Revalidate theo tag
+                // revalidateTag("todos");
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -128,33 +135,35 @@ export async function deleteTodo(formData: FormData) {
           kết quả trả về từ server action:
         </p>
         <div className="rounded-lg bg-zinc-900 p-4 text-sm">
-          <pre className="text-green-400">
-            {`"use client";
+          <CodeBlock>
+            {`
+              "use client";
 
-import { useActionState } from "react";
-import { addTodo } from "./actions";
+              import { useActionState } from "react";
+              import { addTodo } from "./actions";
 
-export default function TodoForm() {
-  const [state, formAction, isPending] = useActionState(
-    async (_prev, formData) => {
-      const result = await addTodo(formData);
-      if (result.error) return { error: result.error };
-      return null;
-    },
-    null
-  );
+              export default function TodoForm() {
+                const [state, formAction, isPending] = useActionState(
+                  async (_prev, formData) => {
+                    const result = await addTodo(formData);
+                    if (result.error) return { error: result.error };
+                    return null;
+                  },
+                  null
+                );
 
-  return (
-    <form action={formAction}>
-      <input type="text" name="title" />
-      <button disabled={isPending}>
-        {isPending ? "Đang thêm..." : "Thêm"}
-      </button>
-      {state?.error && <p>{state.error}</p>}
-    </form>
-  );
-}`}
-          </pre>
+                return (
+                  <form action={formAction}>
+                    <input type="text" name="title" />
+                    <button disabled={isPending}>
+                      {isPending ? "Đang thêm..." : "Thêm"}
+                    </button>
+                    {state?.error && <p>{state.error}</p>}
+                  </form>
+                );
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 

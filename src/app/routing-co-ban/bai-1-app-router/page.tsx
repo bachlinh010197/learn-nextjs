@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai1AppRouterPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -28,21 +30,23 @@ export default function Bai1AppRouterPage() {
           </code>{' '}
           tạo ra một segment trong URL.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-├── page.tsx            → /
-├── about/
-│   └── page.tsx        → /about
-├── blog/
-│   ├── page.tsx        → /blog
-│   └── [slug]/
-│       └── page.tsx    → /blog/bai-viet-1, /blog/bai-viet-2, ...
-└── dashboard/
-    ├── layout.tsx      → Layout chung cho /dashboard/*
-    ├── page.tsx        → /dashboard
-    └── settings/
-        └── page.tsx    → /dashboard/settings`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            ├── page.tsx            → /
+            ├── about/
+            │   └── page.tsx        → /about
+            ├── blog/
+            │   ├── page.tsx        → /blog
+            │   └── [slug]/
+            │       └── page.tsx    → /blog/bai-viet-1, /blog/bai-viet-2, ...
+            └── dashboard/
+                ├── layout.tsx      → Layout chung cho /dashboard/*
+                ├── page.tsx        → /dashboard
+                └── settings/
+                    └── page.tsx    → /dashboard/settings
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -110,17 +114,19 @@ export default function Bai1AppRouterPage() {
           </code>
           :
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/about/page.tsx
-export default function AboutPage() {
-  return (
-    <div>
-      <h1>Giới thiệu</h1>
-      <p>Đây là trang giới thiệu.</p>
-    </div>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/about/page.tsx
+            export default function AboutPage() {
+              return (
+                <div>
+                  <h1>Giới thiệu</h1>
+                  <p>Đây là trang giới thiệu.</p>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
         <p className="text-slate-300">
           Chỉ cần vậy thôi! Next.js sẽ tự động tạo route <strong>/about</strong>{' '}
           cho bạn. Không cần cấu hình router hay khai báo route ở đâu cả.

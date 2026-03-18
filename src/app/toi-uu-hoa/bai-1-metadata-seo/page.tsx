@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai1MetadataSeo() {
   return (
     <div className="prose prose-invert max-w-none">
@@ -15,20 +17,22 @@ export default function Bai1MetadataSeo() {
         Cách đơn giản nhất là export một object <code>metadata</code> từ file{' '}
         <code>layout.tsx</code> hoặc <code>page.tsx</code>:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/about/page.tsx
-import type { Metadata } from "next";
+      <CodeBlock>
+        {`
+          // app/about/page.tsx
+          import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Về chúng tôi | My App",
-  description: "Trang giới thiệu về công ty chúng tôi",
-  keywords: ["nextjs", "react", "seo"],
-};
+          export const metadata: Metadata = {
+            title: "Về chúng tôi | My App",
+            description: "Trang giới thiệu về công ty chúng tôi",
+            keywords: ["nextjs", "react", "seo"],
+          };
 
-export default function AboutPage() {
-  return <h1>Về chúng tôi</h1>;
-}`}</code>
-      </pre>
+          export default function AboutPage() {
+            return <h1>Về chúng tôi</h1>;
+          }
+        `}
+      </CodeBlock>
       <p>
         Next.js sẽ tự động tạo các thẻ <code>&lt;title&gt;</code> và{' '}
         <code>&lt;meta&gt;</code> tương ứng trong <code>&lt;head&gt;</code>.
@@ -40,21 +44,23 @@ export default function AboutPage() {
         Bạn có thể dùng <code>title.template</code> trong layout để tự động thêm
         hậu tố/tiền tố cho title của các trang con:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/layout.tsx
-export const metadata: Metadata = {
-  title: {
-    default: "My App",
-    template: "%s | My App", // %s sẽ được thay bằng title của trang con
-  },
-  description: "Ứng dụng Next.js",
-};
+      <CodeBlock>
+        {`
+          // app/layout.tsx
+          export const metadata: Metadata = {
+            title: {
+              default: "My App",
+              template: "%s | My App", // %s sẽ được thay bằng title của trang con
+            },
+            description: "Ứng dụng Next.js",
+          };
 
-// app/blog/page.tsx
-export const metadata: Metadata = {
-  title: "Blog", // Kết quả: "Blog | My App"
-};`}</code>
-      </pre>
+          // app/blog/page.tsx
+          export const metadata: Metadata = {
+            title: "Blog", // Kết quả: "Blog | My App"
+          };
+        `}
+      </CodeBlock>
 
       {/* --- generateMetadata --- */}
       <h2>3. Dynamic Metadata với generateMetadata</h2>
@@ -62,46 +68,48 @@ export const metadata: Metadata = {
         Khi metadata phụ thuộc vào dữ liệu động (ví dụ: bài viết từ API), bạn
         dùng hàm <code>generateMetadata</code>:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/blog/[slug]/page.tsx
-import type { Metadata } from "next";
+      <CodeBlock>
+        {`
+          // app/blog/[slug]/page.tsx
+          import type { Metadata } from "next";
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+          type Props = {
+            params: Promise<{ slug: string }>;
+          };
 
-async function getPost(slug: string) {
-  const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
-  return res.json();
-}
+          async function getPost(slug: string) {
+            const res = await fetch(\`https://api.example.com/posts/\${slug}\`);
+            return res.json();
+          }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPost(slug);
+          export async function generateMetadata({ params }: Props): Promise<Metadata> {
+            const { slug } = await params;
+            const post = await getPost(slug);
 
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      images: [{ url: post.coverImage }],
-    },
-  };
-}
+            return {
+              title: post.title,
+              description: post.excerpt,
+              openGraph: {
+                title: post.title,
+                description: post.excerpt,
+                images: [{ url: post.coverImage }],
+              },
+            };
+          }
 
-export default async function BlogPost({ params }: Props) {
-  const { slug } = await params;
-  const post = await getPost(slug);
+          export default async function BlogPost({ params }: Props) {
+            const { slug } = await params;
+            const post = await getPost(slug);
 
-  return (
-    <article>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-    </article>
-  );
-}`}</code>
-      </pre>
+            return (
+              <article>
+                <h1>{post.title}</h1>
+                <p>{post.content}</p>
+              </article>
+            );
+          }
+        `}
+      </CodeBlock>
 
       {/* --- Open Graph --- */}
       <h2>4. Open Graph</h2>
@@ -109,91 +117,97 @@ export default async function BlogPost({ params }: Props) {
         Open Graph giúp bài viết hiển thị đẹp khi chia sẻ trên Facebook,
         LinkedIn, Zalo, v.v.:
       </p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`export const metadata: Metadata = {
-  openGraph: {
-    title: "Tiêu đề bài viết",
-    description: "Mô tả ngắn về bài viết",
-    url: "https://example.com/blog/bai-viet",
-    siteName: "My App",
-    images: [
-      {
-        url: "https://example.com/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Ảnh minh họa",
-      },
-    ],
-    locale: "vi_VN",
-    type: "article",
-  },
-};`}</code>
-      </pre>
+      <CodeBlock>
+        {`
+          export const metadata: Metadata = {
+            openGraph: {
+              title: "Tiêu đề bài viết",
+              description: "Mô tả ngắn về bài viết",
+              url: "https://example.com/blog/bai-viet",
+              siteName: "My App",
+              images: [
+                {
+                  url: "https://example.com/og-image.jpg",
+                  width: 1200,
+                  height: 630,
+                  alt: "Ảnh minh họa",
+                },
+              ],
+              locale: "vi_VN",
+              type: "article",
+            },
+          };
+        `}
+      </CodeBlock>
 
       {/* --- Twitter Cards --- */}
       <h2>5. Twitter Cards</h2>
       <p>Tương tự Open Graph nhưng dành cho Twitter (X):</p>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`export const metadata: Metadata = {
-  twitter: {
-    card: "summary_large_image",
-    title: "Tiêu đề bài viết",
-    description: "Mô tả ngắn",
-    images: ["https://example.com/twitter-image.jpg"],
-    creator: "@taikhoan",
-  },
-};`}</code>
-      </pre>
+      <CodeBlock>
+        {`
+          export const metadata: Metadata = {
+            twitter: {
+              card: "summary_large_image",
+              title: "Tiêu đề bài viết",
+              description: "Mô tả ngắn",
+              images: ["https://example.com/twitter-image.jpg"],
+              creator: "@taikhoan",
+            },
+          };
+        `}
+      </CodeBlock>
 
       {/* --- Kết hợp --- */}
       <h2>6. Ví dụ kết hợp đầy đủ</h2>
-      <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-        <code>{`// app/san-pham/[id]/page.tsx
-import type { Metadata } from "next";
+      <CodeBlock>
+        {`
+          // app/san-pham/[id]/page.tsx
+          import type { Metadata } from "next";
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
+          type Props = {
+            params: Promise<{ id: string }>;
+          };
 
-async function getProduct(id: string) {
-  const res = await fetch(\`https://api.example.com/products/\${id}\`);
-  return res.json();
-}
+          async function getProduct(id: string) {
+            const res = await fetch(\`https://api.example.com/products/\${id}\`);
+            return res.json();
+          }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const product = await getProduct(id);
+          export async function generateMetadata({ params }: Props): Promise<Metadata> {
+            const { id } = await params;
+            const product = await getProduct(id);
 
-  return {
-    title: product.name,
-    description: product.description,
-    openGraph: {
-      title: product.name,
-      description: product.description,
-      images: [{ url: product.image, width: 800, height: 600 }],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: product.name,
-      description: product.description,
-      images: [product.image],
-    },
-  };
-}
+            return {
+              title: product.name,
+              description: product.description,
+              openGraph: {
+                title: product.name,
+                description: product.description,
+                images: [{ url: product.image, width: 800, height: 600 }],
+                type: "website",
+              },
+              twitter: {
+                card: "summary_large_image",
+                title: product.name,
+                description: product.description,
+                images: [product.image],
+              },
+            };
+          }
 
-export default async function ProductPage({ params }: Props) {
-  const { id } = await params;
-  const product = await getProduct(id);
+          export default async function ProductPage({ params }: Props) {
+            const { id } = await params;
+            const product = await getProduct(id);
 
-  return (
-    <div>
-      <h1>{product.name}</h1>
-      <p>Giá: {product.price.toLocaleString("vi-VN")}đ</p>
-    </div>
-  );
-}`}</code>
-      </pre>
+            return (
+              <div>
+                <h1>{product.name}</h1>
+                <p>Giá: {product.price.toLocaleString("vi-VN")}đ</p>
+              </div>
+            );
+          }
+        `}
+      </CodeBlock>
 
       {/* --- Tổng kết --- */}
       <h2>Tổng kết</h2>

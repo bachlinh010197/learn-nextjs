@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai1RouteHandlers() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -24,15 +26,17 @@ export default function Bai1RouteHandlers() {
         </p>
         <div className="rounded-lg bg-zinc-900 p-4 text-sm">
           <p className="mb-2 text-xs text-zinc-400">📁 Cấu trúc thư mục:</p>
-          <pre className="text-green-400">
-            {`src/
-└── app/
-    └── api/
-        └── todos/
-            ├── route.ts          → /api/todos
-            └── [id]/
-                └── route.ts      → /api/todos/:id`}
-          </pre>
+          <CodeBlock>
+            {`
+              src/
+              └── app/
+                  └── api/
+                      └── todos/
+                          ├── route.ts          → /api/todos
+                          └── [id]/
+                              └── route.ts      → /api/todos/:id
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -48,18 +52,20 @@ export default function Bai1RouteHandlers() {
           <p className="mb-2 text-xs text-zinc-400">
             📄 src/app/api/todos/route.ts
           </p>
-          <pre className="text-green-400">
-            {`import { NextResponse } from "next/server";
+          <CodeBlock>
+            {`
+              import { NextResponse } from "next/server";
 
-const todos = [
-  { id: 1, title: "Học Next.js", completed: false },
-  { id: 2, title: "Làm bài tập", completed: true },
-];
+              const todos = [
+                { id: 1, title: "Học Next.js", completed: false },
+                { id: 2, title: "Làm bài tập", completed: true },
+              ];
 
-export async function GET() {
-  return NextResponse.json(todos);
-}`}
-          </pre>
+              export async function GET() {
+                return NextResponse.json(todos);
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -75,20 +81,22 @@ export async function GET() {
           <p className="mb-2 text-xs text-zinc-400">
             📄 src/app/api/todos/route.ts
           </p>
-          <pre className="text-green-400">
-            {`export async function POST(request: Request) {
-  const body = await request.json();
+          <CodeBlock>
+            {`
+              export async function POST(request: Request) {
+                const body = await request.json();
 
-  const newTodo = {
-    id: Date.now(),
-    title: body.title,
-    completed: false,
-  };
+                const newTodo = {
+                  id: Date.now(),
+                  title: body.title,
+                  completed: false,
+                };
 
-  // Trong thực tế, lưu vào database
-  return NextResponse.json(newTodo, { status: 201 });
-}`}
-          </pre>
+                // Trong thực tế, lưu vào database
+                return NextResponse.json(newTodo, { status: 201 });
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -104,23 +112,25 @@ export async function GET() {
           <p className="mb-2 text-xs text-zinc-400">
             📄 src/app/api/todos/[id]/route.ts
           </p>
-          <pre className="text-green-400">
-            {`export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  const body = await request.json();
+          <CodeBlock>
+            {`
+              export async function PUT(
+                request: Request,
+                { params }: { params: Promise<{ id: string }> }
+              ) {
+                const { id } = await params;
+                const body = await request.json();
 
-  const updatedTodo = {
-    id: Number(id),
-    title: body.title,
-    completed: body.completed,
-  };
+                const updatedTodo = {
+                  id: Number(id),
+                  title: body.title,
+                  completed: body.completed,
+                };
 
-  return NextResponse.json(updatedTodo);
-}`}
-          </pre>
+                return NextResponse.json(updatedTodo);
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -134,19 +144,21 @@ export async function GET() {
           <p className="mb-2 text-xs text-zinc-400">
             📄 src/app/api/todos/[id]/route.ts
           </p>
-          <pre className="text-green-400">
-            {`export async function DELETE(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
+          <CodeBlock>
+            {`
+              export async function DELETE(
+                _request: Request,
+                { params }: { params: Promise<{ id: string }> }
+              ) {
+                const { id } = await params;
 
-  // Trong thực tế, xoá từ database
-  return NextResponse.json(
-    { message: \`Đã xoá todo \${id}\` }
-  );
-}`}
-          </pre>
+                // Trong thực tế, xoá từ database
+                return NextResponse.json(
+                  { message: \`Đã xoá todo \${id}\` }
+                );
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 
@@ -159,30 +171,32 @@ export async function GET() {
           Bạn có thể đọc query params, headers, cookies từ request:
         </p>
         <div className="rounded-lg bg-zinc-900 p-4 text-sm">
-          <pre className="text-green-400">
-            {`import { NextRequest, NextResponse } from "next/server";
+          <CodeBlock>
+            {`
+              import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  // Đọc query params
-  const searchParams = request.nextUrl.searchParams;
-  const query = searchParams.get("q");
+              export async function GET(request: NextRequest) {
+                // Đọc query params
+                const searchParams = request.nextUrl.searchParams;
+                const query = searchParams.get("q");
 
-  // Đọc headers
-  const authHeader = request.headers.get("authorization");
+                // Đọc headers
+                const authHeader = request.headers.get("authorization");
 
-  // Đọc cookies
-  const token = request.cookies.get("token");
+                // Đọc cookies
+                const token = request.cookies.get("token");
 
-  // Trả về response với custom headers
-  return NextResponse.json(
-    { query, hasAuth: !!authHeader },
-    {
-      status: 200,
-      headers: { "X-Custom-Header": "hello" },
-    }
-  );
-}`}
-          </pre>
+                // Trả về response với custom headers
+                return NextResponse.json(
+                  { query, hasAuth: !!authHeader },
+                  {
+                    status: 200,
+                    headers: { "X-Custom-Header": "hello" },
+                  }
+                );
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 

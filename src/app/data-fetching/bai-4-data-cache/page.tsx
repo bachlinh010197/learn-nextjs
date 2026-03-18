@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -22,20 +23,20 @@ export default function Bai4DataCache() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Cơ chế hoạt động
         </h2>
-        <div className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-6 text-sm text-zinc-100">
-          <pre>
-            <code>{`fetch() request
-    │
-    ▼
-Kiểm tra Data Cache
-    │
-    ├── HIT (có trong cache)
-    │   └── Trả về cached data ──→ Không gọi API
-    │
-    └── MISS (không có trong cache)
-        └── Gọi API ──→ Lưu response vào cache ──→ Trả về data`}</code>
-          </pre>
-        </div>
+        <CodeBlock>
+          {`
+            fetch() request
+                │
+                ▼
+            Kiểm tra Data Cache
+                │
+                ├── HIT (có trong cache)
+                │   └── Trả về cached data ──→ Không gọi API
+                │
+                └── MISS (không có trong cache)
+                    └── Gọi API ──→ Lưu response vào cache ──→ Trả về data
+          `}
+        </CodeBlock>
       </section>
 
       {/* cache: 'force-cache' */}
@@ -51,16 +52,18 @@ Kiểm tra Data Cache
           , Next.js sẽ cache response và không bao giờ tự động fetch lại cho đến
           khi bạn chủ động revalidate.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// Dữ liệu được cache vĩnh viễn
-// Phù hợp cho dữ liệu ít thay đổi (config, danh mục...)
-const res = await fetch('https://api.example.com/categories', {
-  cache: 'force-cache',
-});
+        <CodeBlock>
+          {`
+            // Dữ liệu được cache vĩnh viễn
+            // Phù hợp cho dữ liệu ít thay đổi (config, danh mục...)
+            const res = await fetch('https://api.example.com/categories', {
+              cache: 'force-cache',
+            });
 
-// Lần đầu: gọi API và lưu vào cache
-// Các lần sau: trả về từ cache ngay lập tức`}</code>
-        </pre>
+            // Lần đầu: gọi API và lưu vào cache
+            // Các lần sau: trả về từ cache ngay lập tức
+          `}
+        </CodeBlock>
         <div className="rounded-lg border border-sky-800 bg-sky-900/30 p-4 text-sm text-sky-300">
           <strong>💡 Lưu ý:</strong> Trong Next.js 15+, fetch() mặc định là{' '}
           <code>no-store</code> (không cache). Bạn cần chỉ định rõ{' '}
@@ -77,15 +80,17 @@ const res = await fetch('https://api.example.com/categories', {
           Mỗi request sẽ luôn gọi API để lấy dữ liệu mới nhất. Phù hợp cho dữ
           liệu thay đổi liên tục.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// Dữ liệu luôn fresh — không cache
-// Phù hợp cho dashboard real-time, giỏ hàng...
-const res = await fetch('https://api.example.com/dashboard/stats', {
-  cache: 'no-store',
-});
+        <CodeBlock>
+          {`
+            // Dữ liệu luôn fresh — không cache
+            // Phù hợp cho dashboard real-time, giỏ hàng...
+            const res = await fetch('https://api.example.com/dashboard/stats', {
+              cache: 'no-store',
+            });
 
-// Mỗi lần user truy cập trang → gọi API mới`}</code>
-        </pre>
+            // Mỗi lần user truy cập trang → gọi API mới
+          `}
+        </CodeBlock>
       </section>
 
       {/* Time-based Revalidation */}
@@ -97,32 +102,36 @@ const res = await fetch('https://api.example.com/dashboard/stats', {
           Cache dữ liệu nhưng tự động làm mới sau một khoảng thời gian. Kết hợp
           ưu điểm của cả caching và dữ liệu fresh.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// Cache trong 1 giờ (3600 giây)
-const res = await fetch('https://api.example.com/products', {
-  next: { revalidate: 3600 },
-});
+        <CodeBlock>
+          {`
+            // Cache trong 1 giờ (3600 giây)
+            const res = await fetch('https://api.example.com/products', {
+              next: { revalidate: 3600 },
+            });
 
-// Hoạt động theo cơ chế stale-while-revalidate:
-// 1. Lần đầu: gọi API, cache kết quả
-// 2. Trong 3600 giây: trả về từ cache
-// 3. Sau 3600 giây: vẫn trả về cache (stale),
-//    nhưng trigger revalidation ở background
-// 4. Khi revalidation xong: cập nhật cache với data mới`}</code>
-        </pre>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// Có thể đặt revalidate ở cấp route thay vì từng fetch:
-// app/products/page.tsx
-export const revalidate = 3600; // Tất cả fetch trong route revalidate sau 1h
+            // Hoạt động theo cơ chế stale-while-revalidate:
+            // 1. Lần đầu: gọi API, cache kết quả
+            // 2. Trong 3600 giây: trả về từ cache
+            // 3. Sau 3600 giây: vẫn trả về cache (stale),
+            //    nhưng trigger revalidation ở background
+            // 4. Khi revalidation xong: cập nhật cache với data mới
+          `}
+        </CodeBlock>
+        <CodeBlock>
+          {`
+            // Có thể đặt revalidate ở cấp route thay vì từng fetch:
+            // app/products/page.tsx
+            export const revalidate = 3600; // Tất cả fetch trong route revalidate sau 1h
 
-export default async function ProductsPage() {
-  // Fetch này sẽ dùng revalidate = 3600
-  const res = await fetch('https://api.example.com/products');
-  const products = await res.json();
+            export default async function ProductsPage() {
+              // Fetch này sẽ dùng revalidate = 3600
+              const res = await fetch('https://api.example.com/products');
+              const products = await res.json();
 
-  return <ProductList products={products} />;
-}`}</code>
-        </pre>
+              return <ProductList products={products} />;
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* On-demand Revalidation */}
@@ -142,28 +151,30 @@ export default async function ProductsPage() {
           </code>
           .
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// Bước 1: Gán tag cho fetch request
-// app/products/page.tsx
-const res = await fetch('https://api.example.com/products', {
-  next: { tags: ['products'] },
-});
+        <CodeBlock>
+          {`
+            // Bước 1: Gán tag cho fetch request
+            // app/products/page.tsx
+            const res = await fetch('https://api.example.com/products', {
+              next: { tags: ['products'] },
+            });
 
-// Bước 2: Revalidate khi cần (trong Server Action)
-// app/actions.ts
-'use server';
-import { revalidateTag, revalidatePath } from 'next/cache';
+            // Bước 2: Revalidate khi cần (trong Server Action)
+            // app/actions.ts
+            'use server';
+            import { revalidateTag, revalidatePath } from 'next/cache';
 
-export async function createProduct(formData: FormData) {
-  // ... tạo product mới
+            export async function createProduct(formData: FormData) {
+              // ... tạo product mới
 
-  // Cách 1: Revalidate theo tag
-  revalidateTag('products');
+              // Cách 1: Revalidate theo tag
+              revalidateTag('products');
 
-  // Cách 2: Revalidate theo path
-  revalidatePath('/products');
-}`}</code>
-        </pre>
+              // Cách 2: Revalidate theo path
+              revalidatePath('/products');
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Ví dụ tổng hợp */}
@@ -171,34 +182,36 @@ export async function createProduct(formData: FormData) {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Ví dụ tổng hợp
         </h2>
-        <pre className="mb-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/shop/page.tsx
-export default async function ShopPage() {
-  // Danh mục — ít thay đổi, cache vĩnh viễn
-  const categories = await fetch('https://api.example.com/categories', {
-    cache: 'force-cache',
-    next: { tags: ['categories'] },
-  }).then(r => r.json());
+        <CodeBlock>
+          {`
+            // app/shop/page.tsx
+            export default async function ShopPage() {
+              // Danh mục — ít thay đổi, cache vĩnh viễn
+              const categories = await fetch('https://api.example.com/categories', {
+                cache: 'force-cache',
+                next: { tags: ['categories'] },
+              }).then(r => r.json());
 
-  // Sản phẩm — thay đổi thường xuyên, revalidate mỗi 5 phút
-  const products = await fetch('https://api.example.com/products', {
-    next: { revalidate: 300, tags: ['products'] },
-  }).then(r => r.json());
+              // Sản phẩm — thay đổi thường xuyên, revalidate mỗi 5 phút
+              const products = await fetch('https://api.example.com/products', {
+                next: { revalidate: 300, tags: ['products'] },
+              }).then(r => r.json());
 
-  // Giỏ hàng — dữ liệu real-time, không cache
-  const cart = await fetch('https://api.example.com/cart', {
-    cache: 'no-store',
-  }).then(r => r.json());
+              // Giỏ hàng — dữ liệu real-time, không cache
+              const cart = await fetch('https://api.example.com/cart', {
+                cache: 'no-store',
+              }).then(r => r.json());
 
-  return (
-    <div>
-      <CategoryNav categories={categories} />
-      <ProductGrid products={products} />
-      <CartSummary cart={cart} />
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div>
+                  <CategoryNav categories={categories} />
+                  <ProductGrid products={products} />
+                  <CartSummary cart={cart} />
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Bảng tổng hợp */}

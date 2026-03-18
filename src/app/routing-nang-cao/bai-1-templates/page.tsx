@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai1TemplatesPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -97,29 +99,31 @@ export default function Bai1TemplatesPage() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Ví dụ: template.tsx
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/routing-nang-cao/bai-1-templates/template.tsx
-"use client";
+        <CodeBlock>
+          {`
+            // app/routing-nang-cao/bai-1-templates/template.tsx
+            "use client";
 
-import { useEffect } from "react";
+            import { useEffect } from "react";
 
-export default function Template({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  useEffect(() => {
-    // Chạy lại mỗi khi điều hướng
-    console.log("Template mounted - page view logged!");
-  }, []);
+            export default function Template({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              useEffect(() => {
+                // Chạy lại mỗi khi điều hướng
+                console.log("Template mounted - page view logged!");
+              }, []);
 
-  return (
-    <div className="animate-fade-in">
-      {children}
-    </div>
-  );
-}`}</code>
-        </pre>
+              return (
+                <div className="animate-fade-in">
+                  {children}
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Ví dụ layout */}
@@ -127,24 +131,26 @@ export default function Template({
         <h2 className="mb-3 text-2xl font-semibold text-white">
           So sánh với layout.tsx
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/layout.tsx
-// Component này KHÔNG re-mount khi điều hướng
-// State được giữ nguyên giữa các trang con
+        <CodeBlock>
+          {`
+            // app/dashboard/layout.tsx
+            // Component này KHÔNG re-mount khi điều hướng
+            // State được giữ nguyên giữa các trang con
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <nav>Sidebar - luôn giữ nguyên</nav>
-      <main>{children}</main>
-    </div>
-  );
-}`}</code>
-        </pre>
+            export default function DashboardLayout({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              return (
+                <div>
+                  <nav>Sidebar - luôn giữ nguyên</nav>
+                  <main>{children}</main>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Cấu trúc thư mục */}
@@ -152,17 +158,19 @@ export default function DashboardLayout({
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Cấu trúc thư mục
         </h2>
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-└── dashboard/
-    ├── layout.tsx      ← Giữ nguyên state
-    ├── template.tsx    ← Re-mount mỗi lần điều hướng
-    ├── page.tsx
-    ├── settings/
-    │   └── page.tsx
-    └── profile/
-        └── page.tsx`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            └── dashboard/
+                ├── layout.tsx      ← Giữ nguyên state
+                ├── template.tsx    ← Re-mount mỗi lần điều hướng
+                ├── page.tsx
+                ├── settings/
+                │   └── page.tsx
+                └── profile/
+                    └── page.tsx
+          `}
+        </CodeBlock>
         <p className="mt-3 text-sm text-slate-300">
           Khi điều hướng từ{' '}
           <code className="rounded bg-slate-700 px-1.5 py-0.5 text-sky-300">

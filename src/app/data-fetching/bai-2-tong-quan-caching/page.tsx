@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,41 +22,40 @@ export default function Bai2TongQuanCaching() {
         <h2 className="mb-3 text-2xl font-semibold text-white">
           Sơ đồ 4 tầng Caching
         </h2>
-        <div className="mb-6 overflow-x-auto rounded-xl bg-zinc-900 p-6 text-sm text-zinc-100">
-          <pre>
-            <code>{`┌─────────────────────────────────────────────────────────┐
-│                      CLIENT (Browser)                   │
-│                                                         │
-│   ┌─────────────────────────────────────────────────┐   │
-│   │          4. Router Cache                        │   │
-│   │    Cache RSC payload phía client khi điều hướng │   │
-│   └──────────────────────┬──────────────────────────┘   │
-└──────────────────────────┼──────────────────────────────┘
-                           │ Navigation Request
-┌──────────────────────────┼──────────────────────────────┐
-│                      SERVER (Next.js)                   │
-│                          ▼                              │
-│   ┌─────────────────────────────────────────────────┐   │
-│   │          3. Full Route Cache                    │   │
-│   │    Cache HTML + RSC payload đã render           │   │
-│   └──────────────────────┬──────────────────────────┘   │
-│                          │ Render                       │
-│   ┌──────────────────────▼──────────────────────────┐   │
-│   │          1. Request Memoization                 │   │
-│   │    Deduplicate fetch() trong cùng render pass   │   │
-│   └──────────────────────┬──────────────────────────┘   │
-│                          │ fetch()                      │
-│   ┌──────────────────────▼──────────────────────────┐   │
-│   │          2. Data Cache                          │   │
-│   │    Cache response từ data source                │   │
-│   └──────────────────────┬──────────────────────────┘   │
-│                          │                              │
-└──────────────────────────┼──────────────────────────────┘
-                           ▼
-                    Data Source (API, DB)
-`}</code>
-          </pre>
-        </div>
+        <CodeBlock>
+          {`
+            ┌─────────────────────────────────────────────────────────┐
+            │                      CLIENT (Browser)                   │
+            │                                                         │
+            │   ┌─────────────────────────────────────────────────┐   │
+            │   │          4. Router Cache                        │   │
+            │   │    Cache RSC payload phía client khi điều hướng │   │
+            │   └──────────────────────┬──────────────────────────┘   │
+            └──────────────────────────┼──────────────────────────────┘
+                                       │ Navigation Request
+            ┌──────────────────────────┼──────────────────────────────┐
+            │                      SERVER (Next.js)                   │
+            │                          ▼                              │
+            │   ┌─────────────────────────────────────────────────┐   │
+            │   │          3. Full Route Cache                    │   │
+            │   │    Cache HTML + RSC payload đã render           │   │
+            │   └──────────────────────┬──────────────────────────┘   │
+            │                          │ Render                       │
+            │   ┌──────────────────────▼──────────────────────────┐   │
+            │   │          1. Request Memoization                 │   │
+            │   │    Deduplicate fetch() trong cùng render pass   │   │
+            │   └──────────────────────┬──────────────────────────┘   │
+            │                          │ fetch()                      │
+            │   ┌──────────────────────▼──────────────────────────┐   │
+            │   │          2. Data Cache                          │   │
+            │   │    Cache response từ data source                │   │
+            │   └──────────────────────┬──────────────────────────┘   │
+            │                          │                              │
+            └──────────────────────────┼──────────────────────────────┘
+                                       ▼
+                                Data Source (API, DB)
+          `}
+        </CodeBlock>
       </section>
 
       {/* Chi tiết từng tầng */}

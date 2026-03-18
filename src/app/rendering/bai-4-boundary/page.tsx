@@ -1,3 +1,4 @@
+import { CodeBlock } from '@/components/CodeBlock';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -44,41 +45,45 @@ export default function Bai4Page() {
           . Đây chính là &quot;boundary&quot; — ranh giới mà từ đó mọi thứ đều
           chạy trên client.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// ❌ SAI: Import Server Component trong Client Component
-"use client";
-import ServerComponent from "./ServerComponent"; // Sẽ thành Client!
+        <CodeBlock>
+          {`
+            // ❌ SAI: Import Server Component trong Client Component
+            "use client";
+            import ServerComponent from "./ServerComponent"; // Sẽ thành Client!
 
-export default function ClientWrapper() {
-  return <ServerComponent />; // Không còn là Server Component nữa
-}`}</code>
-        </pre>
+            export default function ClientWrapper() {
+              return <ServerComponent />; // Không còn là Server Component nữa
+            }
+          `}
+        </CodeBlock>
 
-        <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-          <code>{`// ✅ ĐÚNG: Truyền Server Component qua children
-// layout.tsx (Server Component)
-import ClientWrapper from "./ClientWrapper";
-import ServerComponent from "./ServerComponent";
+        <CodeBlock>
+          {`
+            // ✅ ĐÚNG: Truyền Server Component qua children
+            // layout.tsx (Server Component)
+            import ClientWrapper from "./ClientWrapper";
+            import ServerComponent from "./ServerComponent";
 
-export default function Layout() {
-  return (
-    <ClientWrapper>
-      <ServerComponent /> {/* Vẫn là Server Component! */}
-    </ClientWrapper>
-  );
-}
+            export default function Layout() {
+              return (
+                <ClientWrapper>
+                  <ServerComponent /> {/* Vẫn là Server Component! */}
+                </ClientWrapper>
+              );
+            }
 
-// ClientWrapper.tsx
-"use client";
-export default function ClientWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [isOpen, setIsOpen] = useState(true);
-  return isOpen ? <div>{children}</div> : null;
-}`}</code>
-        </pre>
+            // ClientWrapper.tsx
+            "use client";
+            export default function ClientWrapper({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              const [isOpen, setIsOpen] = useState(true);
+              return isOpen ? <div>{children}</div> : null;
+            }
+          `}
+        </CodeBlock>
       </section>
 
       {/* Common mistakes */}
@@ -92,20 +97,22 @@ export default function ClientWrapper({
           <h3 className="mb-2 font-semibold text-red-300">
             Lỗi 1: Dùng hooks trong Server Component
           </h3>
-          <pre className="mb-3 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-red-400">
-            <code>{`// ❌ LỖI: useState trong Server Component
-// page.tsx (Server Component - không có "use client")
-import { useState } from "react";
+          <CodeBlock>
+            {`
+              // ❌ LỖI: useState trong Server Component
+              // page.tsx (Server Component - không có "use client")
+              import { useState } from "react";
 
-export default function Page() {
-  const [count, setCount] = useState(0); // Error!
-  return <p>{count}</p>;
-}
+              export default function Page() {
+                const [count, setCount] = useState(0); // Error!
+                return <p>{count}</p>;
+              }
 
-// Error: You're importing a component that needs useState.
-// It only works in a Client Component but none of its
-// parents are marked with "use client".`}</code>
-          </pre>
+              // Error: You're importing a component that needs useState.
+              // It only works in a Client Component but none of its
+              // parents are marked with "use client".
+            `}
+          </CodeBlock>
           <p className="text-sm text-red-400">
             <strong>Fix:</strong> Thêm <code>&quot;use client&quot;</code> ở đầu
             file, hoặc tách phần interactive ra thành Client Component riêng.
@@ -117,23 +124,25 @@ export default function Page() {
           <h3 className="mb-2 font-semibold text-red-300">
             Lỗi 2: Truyền non-serializable props từ Server sang Client
           </h3>
-          <pre className="mb-3 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-red-400">
-            <code>{`// ❌ LỖI: Truyền function từ Server → Client
-// page.tsx (Server Component)
-import ClientButton from "./ClientButton";
+          <CodeBlock>
+            {`
+              // ❌ LỖI: Truyền function từ Server → Client
+              // page.tsx (Server Component)
+              import ClientButton from "./ClientButton";
 
-export default function Page() {
-  function handleClick() {  // function không serializable!
-    console.log("clicked");
-  }
+              export default function Page() {
+                function handleClick() {  // function không serializable!
+                  console.log("clicked");
+                }
 
-  return <ClientButton onClick={handleClick} />;
-}
+                return <ClientButton onClick={handleClick} />;
+              }
 
-// Error: Functions cannot be passed directly to
-// Client Components unless you explicitly expose it
-// by marking it with "use server".`}</code>
-          </pre>
+              // Error: Functions cannot be passed directly to
+              // Client Components unless you explicitly expose it
+              // by marking it with "use server".
+            `}
+          </CodeBlock>
           <p className="text-sm text-red-400">
             <strong>Fix:</strong> Dùng Server Actions (
             <code>&quot;use server&quot;</code>) hoặc định nghĩa function trong
@@ -146,56 +155,60 @@ export default function Page() {
           <h3 className="mb-2 font-semibold text-red-300">
             Lỗi 3: Đánh dấu &quot;use client&quot; quá cao trong component tree
           </h3>
-          <pre className="mb-3 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-red-400">
-            <code>{`// ❌ KHÔNG NÊN: "use client" ở page level
-"use client"; // Toàn bộ page thành Client Component!
+          <CodeBlock>
+            {`
+              // ❌ KHÔNG NÊN: "use client" ở page level
+              "use client"; // Toàn bộ page thành Client Component!
 
-export default function ProductPage() {
-  const [qty, setQty] = useState(1);
+              export default function ProductPage() {
+                const [qty, setQty] = useState(1);
 
-  return (
-    <div>
-      <h1>iPhone 15 Pro</h1>        {/* Không cần client */}
-      <p>Mô tả sản phẩm dài...</p>  {/* Không cần client */}
-      <p>Giá: 28.990.000đ</p>       {/* Không cần client */}
+                return (
+                  <div>
+                    <h1>iPhone 15 Pro</h1>        {/* Không cần client */}
+                    <p>Mô tả sản phẩm dài...</p>  {/* Không cần client */}
+                    <p>Giá: 28.990.000đ</p>       {/* Không cần client */}
 
-      {/* Chỉ phần này cần client */}
-      <input value={qty} onChange={e => setQty(+e.target.value)} />
-      <button>Thêm vào giỏ</button>
-    </div>
-  );
-}`}</code>
-          </pre>
-          <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-green-400">
-            <code>{`// ✅ ĐÚNG: Tách phần client ra component riêng
-// page.tsx (Server Component)
-import AddToCart from "./AddToCart";
+                    {/* Chỉ phần này cần client */}
+                    <input value={qty} onChange={e => setQty(+e.target.value)} />
+                    <button>Thêm vào giỏ</button>
+                  </div>
+                );
+              }
+            `}
+          </CodeBlock>
+          <CodeBlock>
+            {`
+              // ✅ ĐÚNG: Tách phần client ra component riêng
+              // page.tsx (Server Component)
+              import AddToCart from "./AddToCart";
 
-export default function ProductPage() {
-  return (
-    <div>
-      <h1>iPhone 15 Pro</h1>
-      <p>Mô tả sản phẩm dài...</p>
-      <p>Giá: 28.990.000đ</p>
-      <AddToCart /> {/* Chỉ component này là Client */}
-    </div>
-  );
-}
+              export default function ProductPage() {
+                return (
+                  <div>
+                    <h1>iPhone 15 Pro</h1>
+                    <p>Mô tả sản phẩm dài...</p>
+                    <p>Giá: 28.990.000đ</p>
+                    <AddToCart /> {/* Chỉ component này là Client */}
+                  </div>
+                );
+              }
 
-// AddToCart.tsx
-"use client";
-import { useState } from "react";
+              // AddToCart.tsx
+              "use client";
+              import { useState } from "react";
 
-export default function AddToCart() {
-  const [qty, setQty] = useState(1);
-  return (
-    <div>
-      <input value={qty} onChange={e => setQty(+e.target.value)} />
-      <button>Thêm vào giỏ</button>
-    </div>
-  );
-}`}</code>
-          </pre>
+              export default function AddToCart() {
+                const [qty, setQty] = useState(1);
+                return (
+                  <div>
+                    <input value={qty} onChange={e => setQty(+e.target.value)} />
+                    <button>Thêm vào giỏ</button>
+                  </div>
+                );
+              }
+            `}
+          </CodeBlock>
         </div>
       </section>
 

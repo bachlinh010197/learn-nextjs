@@ -1,3 +1,5 @@
+import { CodeBlock } from '@/components/CodeBlock';
+
 export default function Bai2LayoutPage() {
   return (
     <div className="mx-auto max-w-3xl">
@@ -29,31 +31,33 @@ export default function Bai2LayoutPage() {
           <code className="rounded bg-slate-700 px-1.5 py-0.5 text-sm text-sky-300">{`<body>`}</code>
           .
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/layout.tsx — Root Layout
-import type { Metadata } from "next";
+        <CodeBlock>
+          {`
+            // app/layout.tsx — Root Layout
+            import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "My App",
-  description: "Ứng dụng Next.js",
-};
+            export const metadata: Metadata = {
+              title: "My App",
+              description: "Ứng dụng Next.js",
+            };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="vi">
-      <body>
-        <header>Header chung cho toàn bộ app</header>
-        {children}
-        <footer>Footer chung</footer>
-      </body>
-    </html>
-  );
-}`}</code>
-        </pre>
+            export default function RootLayout({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              return (
+                <html lang="vi">
+                  <body>
+                    <header>Header chung cho toàn bộ app</header>
+                    {children}
+                    <footer>Footer chung</footer>
+                  </body>
+                </html>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -65,39 +69,43 @@ export default function RootLayout({
           </code>{' '}
           trong thư mục con. Layout con sẽ được lồng bên trong layout cha.
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`app/
-├── layout.tsx          → Root Layout (html, body)
-├── page.tsx            → Trang chủ
-└── dashboard/
-    ├── layout.tsx      → Dashboard Layout (sidebar)
-    ├── page.tsx        → /dashboard
-    └── settings/
-        └── page.tsx    → /dashboard/settings`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            app/
+            ├── layout.tsx          → Root Layout (html, body)
+            ├── page.tsx            → Trang chủ
+            └── dashboard/
+                ├── layout.tsx      → Dashboard Layout (sidebar)
+                ├── page.tsx        → /dashboard
+                └── settings/
+                    └── page.tsx    → /dashboard/settings
+          `}
+        </CodeBlock>
 
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`// app/dashboard/layout.tsx — Nested Layout
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex">
-      <aside className="w-64 bg-gray-100">
-        <nav>
-          <a href="/dashboard">Tổng quan</a>
-          <a href="/dashboard/settings">Cài đặt</a>
-        </nav>
-      </aside>
-      <main className="flex-1 p-6">
-        {children}
-      </main>
-    </div>
-  );
-}`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            // app/dashboard/layout.tsx — Nested Layout
+            export default function DashboardLayout({
+              children,
+            }: {
+              children: React.ReactNode;
+            }) {
+              return (
+                <div className="flex">
+                  <aside className="w-64 bg-gray-100">
+                    <nav>
+                      <a href="/dashboard">Tổng quan</a>
+                      <a href="/dashboard/settings">Cài đặt</a>
+                    </nav>
+                  </aside>
+                  <main className="flex-1 p-6">
+                    {children}
+                  </main>
+                </div>
+              );
+            }
+          `}
+        </CodeBlock>
       </section>
 
       <section className="mb-8">
@@ -111,13 +119,15 @@ export default function DashboardLayout({
           </code>
           , Next.js sẽ render theo thứ tự:
         </p>
-        <pre className="mb-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100">
-          <code>{`<RootLayout>        {/* app/layout.tsx */}
-  <DashboardLayout>  {/* app/dashboard/layout.tsx */}
-    <SettingsPage />  {/* app/dashboard/settings/page.tsx */}
-  </DashboardLayout>
-</RootLayout>`}</code>
-        </pre>
+        <CodeBlock>
+          {`
+            <RootLayout>        {/* app/layout.tsx */}
+              <DashboardLayout>  {/* app/dashboard/layout.tsx */}
+                <SettingsPage />  {/* app/dashboard/settings/page.tsx */}
+              </DashboardLayout>
+            </RootLayout>
+          `}
+        </CodeBlock>
       </section>
 
       <section className="rounded-lg border border-emerald-800 bg-emerald-900/30 p-4">
